@@ -1,0 +1,57 @@
+/* Sezione Hero */
+.hero-container {
+  position: relative;
+  height: 70vh; /* Imposta l'altezza della sezione Hero */
+  background-image: url("../assets/images/mukuko-studio-tPKQwYHy8q4-unsplash.jpg"); /* Sostituisci con il tuo URL immagine */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+/* Sottotitolo */
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.btn-hero:hover {
+  background-color: #e0e0e0;
+  color: black;
+}
+
+/* src/style/Hero.css */
+
+.image-section {
+  margin: 2rem 0;
+}
+
+.image-container {
+  position: relative;
+  flex: 1;
+  margin: 0 1rem;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}
+
+.btn-overlay {
+  position: absolute !important;
+  top: 50% !important;
+  left: 5% !important;
+  bottom: 50% !important;
+  color: white;
+  border: none;
+  z-index: 1;
+}
+.btn-overlay p {
+  font-size: 2em;
+  font-weight: 700;
+  color: white;
+}

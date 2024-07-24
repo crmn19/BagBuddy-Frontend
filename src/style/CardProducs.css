@@ -1,0 +1,9 @@
+.card-products {
+  background-color: transparent;
+  border: none;
+  border-radius: none !important;
+}
+.card-products .card-img-top {
+  border-top-left-radius: none !important;
+  border-top-right-radius: none !important;
+}
