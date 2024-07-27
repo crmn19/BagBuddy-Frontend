@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../../../assets/images/Borcele Bag (1).png";
+import logo from "../../../../assets/images/BAGBBUNNY.png";
 import Button from "@mui/material/Button";
 import { MdOutlineLightMode } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
@@ -14,12 +14,15 @@ import Logout from "@mui/icons-material/Logout";
 import { IoShieldHalfSharp } from "react-icons/io5";
 import Divider from "@mui/material/Divider";
 import UserAvatarImgComponent from "../userAvatarImg/UserAvatarImgComponent";
+import { Container } from "react-bootstrap";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpennotificationDrop, setisOpennotificationDrop] = useState(false);
   const openMyAcc = Boolean(anchorEl);
   const openNotifications = Boolean(isOpennotificationDrop);
+  const [token, setToken] = useState(localStorage.getItem("authToken"));
+  const [admin, setAdmin] = useState(null);
 
   const handleOpenMyAccDrop = event => {
     setAnchorEl(event.currentTarget);
@@ -35,35 +38,45 @@ const Header = () => {
   const handleClosenotificationsDrop = () => {
     setisOpennotificationDrop(false);
   };
+  useEffect(() => {
+    const fetchCliente = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/customers/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const adminData = await response.json();
+        setAdmin(adminData);
+      } catch (error) {
+        console.error("Errore nel caricamento dei dati del cliente", error);
+      }
+    };
+
+    fetchCliente();
+  }, [token]);
 
   return (
     <>
       <header className="d-flex align-items-center">
-        <div className="container-fluid w-100">
-          <div className="row d-flex align-items-center w-100">
+        <Container fluid className=" w-100">
+          <div className="row d-flex align-items-center justify-content-between w-100">
             {/* Logo Wraooer */}
             <div className="col-sm-2 part1">
               <Link to={"/"} className="d-flex align-items-center logo">
-                <img src={logo} />
-                <span className="ml-2">HOTASH</span>
+                <img src={logo} style={{ width: "15vh" }} alt="Logo" />
               </Link>
             </div>
 
             <div className="col-sm-7 d-flex align-items-center justify-content-end part3">
-              <Button className="rounded-circle mr-3">
-                <MdOutlineLightMode />
-              </Button>
-
               <div className="dropdownWrapper position-relative">
                 <Button
                   className="rounded-circle mr-3"
                   onClick={handleOpenotificationsDrop}
                 >
                   <FaRegBell />
-                </Button>
-
-                <Button className="rounded-circle mr-3">
-                  <IoMenu />
                 </Button>
 
                 <Menu
@@ -76,8 +89,8 @@ const Header = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                  <div className="head pl-3 pb-0">
-                    <h4>Orders (12) </h4>
+                  <div className="head pl-3 pb-0 mx-3">
+                    <h4> Ordini (1) </h4>
                   </div>
 
                   <Divider className="mb-1" />
@@ -88,7 +101,7 @@ const Header = () => {
                         <div>
                           <UserAvatarImgComponent
                             img={
-                              "https://mironcoder-hotash.netlify.app/images/avatar/01.webp"
+                              "https://img.freepik.com/premium-photo/graphic-designer-digital-avatar-generative-ai_934475-9292.jpg"
                             }
                           />
                         </div>
@@ -96,136 +109,15 @@ const Header = () => {
                         <div className="dropdownInfo">
                           <h4>
                             <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
+                              <b>Giovanni Rossi </b>
+                              ha acquistato
+                              <b> Zaino Sport</b>
                             </span>
                           </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
+                          <p className="text-sky mb-0">pochi secondi fa</p>
                         </div>
                       </div>
                     </MenuItem>
-
-                    <MenuItem onClick={handleCloseMyAccDrop}>
-                      <div className="d-flex">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-
-                    <MenuItem onClick={handleCloseMyAccDrop}>
-                      <div className="d-flex">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-
-                    <MenuItem onClick={handleCloseMyAccDrop}>
-                      <div className="d-flex">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-
-                    <MenuItem onClick={handleCloseMyAccDrop}>
-                      <div className="d-flex">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-
-                    <MenuItem onClick={handleCloseMyAccDrop}>
-                      <div className="d-flex">
-                        <div>
-                          <div className="userImg">
-                            <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="dropdownInfo">
-                          <h4>
-                            <span>
-                              <b>Mahmudul </b>
-                              added to his favorite list
-                              <b> Leather belt steve madden</b>
-                            </span>
-                          </h4>
-                          <p className="text-sky mb-0">few seconds ago</p>
-                        </div>
-                      </div>
-                    </MenuItem>
-                  </div>
-
-                  <div className="pl-3 pr-3 w-100 pt-2 pb-1">
-                    <Button className="btn-blue w-100">
-                      View all notifications
-                    </Button>
                   </div>
                 </Menu>
               </div>
@@ -237,13 +129,19 @@ const Header = () => {
                 >
                   <div className="userImg">
                     <span className="rounded-circle">
-                      <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
+                      {admin?.sesso == "UOMO" ? (
+                        <img src="https://img.freepik.com/premium-photo/graphic-designer-digital-avatar-generative-ai_934475-9292.jpg" />
+                      ) : (
+                        <img src="https://img.freepik.com/free-photo/portrait-beautiful-young-woman-with-stylish-hairstyle-glasses_1142-40217.jpg" />
+                      )}
                     </span>
                   </div>
 
                   <div className="userInfo res-hide">
-                    <h4>Rinku Verma</h4>
-                    <p className="mb-0">@rinkuv37</p>
+                    <h4>
+                      {admin?.nome} {admin?.cognome}
+                    </h4>
+                    <p className="mb-0">ADMIN</p>
                   </div>
                 </Button>
 
@@ -278,7 +176,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </header>
     </>
   );

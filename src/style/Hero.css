@@ -55,3 +55,15 @@
   font-weight: 700;
   color: white;
 }
+
+.btn-overlay2 {
+  position: absolute;
+  top: 47%;
+  right: 5%;
+  text-align: right;
+  color: rgb(255, 255, 255);
+}
+
+.btn-product {
+  margin-top: 10px;
+}

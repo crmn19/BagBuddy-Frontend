@@ -9,7 +9,7 @@ body {
   background: #ffffff;
   overflow-x: hidden;
 }
-/* }
+
 body.dark {
   background: #071739 !important;
 }
@@ -1502,4 +1502,4 @@ body.dark .imgUploadBox .uploadBox {
 
 .MuiRating-root * {
   color: #faaf00 !important;
-} */
+}

@@ -14,6 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import DashboardBox from "../Dashboard/components/DashboardBox";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Chart from "react-google-charts";
+import Header from "../../components/Header/Header";
 
 export const data = [
   ["Year", "Sales", "Expenses"],
@@ -43,8 +44,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="main d-flex">
-      <Sidebar />ù
+    <div className="main d-flex mt-5">
+      <div className="mt-5">
+        <Header />
+      </div>
+      <div className="mt-5">
+        <Sidebar />
+      </div>
+
       <div className="right-content w-100">
         <div className="row dashboardBoxWrapperRow">
           <div className="col-md-8">
