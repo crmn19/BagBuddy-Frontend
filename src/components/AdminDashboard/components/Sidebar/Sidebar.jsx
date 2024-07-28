@@ -30,7 +30,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <ul>
         <li>
-          <Link to="/">
+          <Link to="/dashboard">
             <Button className={`w-100 ${openSubmenu === null ? "active" : ""}`}>
               <span className="icon">
                 <MdDashboard />

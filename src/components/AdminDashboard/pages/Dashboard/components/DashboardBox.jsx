@@ -9,8 +9,13 @@ import { IoIosTimer } from "react-icons/io";
 
 const DashboardBox = props => {
   const [customers, setCustomers] = useState([]);
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
+  const [orders, setOrders] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const token = localStorage.getItem("authToken");
+
+  const userFetch = () => {
     fetch("http://localhost:3001/customers", {
       method: "GET",
       headers: {
@@ -28,16 +33,41 @@ const DashboardBox = props => {
         setCustomers(data.content || []);
       })
       .catch(error => console.error("Error fetching products:", error));
-  }, [customers]);
+  };
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const orderFetch = () => {
+    fetch("http://localhost:3001/orders", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error fetching order: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setOrders(data.content || []);
+      })
+      .catch(error => console.error("Error fetching order:", error));
+  };
+
+  useEffect(() => {
+    if (token) {
+      userFetch();
+      orderFetch();
+    }
+  }, [token]);
 
   const ITEM_HEIGHT = 48;
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
