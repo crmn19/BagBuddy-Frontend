@@ -1,34 +1,27 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { MdDashboard, MdMessage } from "react-icons/md";
-import {
-  FaAngleRight,
-  FaProductHunt,
-  FaCartArrowDown,
-  FaBell,
-  FaUser,
-} from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
+import { FaProductHunt, FaCartArrowDown, FaBell } from "react-icons/fa";
 import { IoIosSettings, IoMdLogOut } from "react-icons/io";
-import {
-  Collapse,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Collapse, List, ListItemButton } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState(null);
+  const navigate = useNavigate();
 
   const handleClick = index => {
     setOpenSubmenu(openSubmenu === index ? null : index);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/loginAdmin");
+  };
 
   return (
     <div className="sidebar">
-      <ul>
+      <ul style={{ listStyle: "none" }}>
         <li>
           <Link to="/dashboard">
             <Button className={`w-100 ${openSubmenu === null ? "active" : ""}`}>
@@ -56,8 +49,11 @@ const Sidebar = () => {
             <List className="submenu">
               <Collapse in={openSubmenu === 1} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemButton sx={{ pl: 8 }}>
                     <Link to="/productAdmin">Lista prodotti</Link>
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 8 }}>
+                    <Link to="/creaProdotto">Crea prodotto</Link>
                   </ListItemButton>
                 </List>
               </Collapse>
@@ -99,17 +95,11 @@ const Sidebar = () => {
         </li>
         <li>
           <Link to="/">
-            <Button
-              className={`w-100 ${openSubmenu === 1 ? "active" : ""}`}
-              onClick={() => handleClick(1)}
-            >
+            <Button className="w-100">
               <span className="icon mx-2">
                 <IoIosSettings />
               </span>
               Impostazioni
-              <span className="arrow">
-                {openSubmenu === 1 ? <ExpandLess /> : <ExpandMore />}
-              </span>
             </Button>
           </Link>
         </li>
@@ -119,7 +109,7 @@ const Sidebar = () => {
 
       <div className="logoutWrapper">
         <div className="logoutBox">
-          <Button variant="contained">
+          <Button variant="contained" onClick={handleLogout}>
             <IoMdLogOut /> Logout
           </Button>
         </div>

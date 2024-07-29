@@ -1,0 +1,36 @@
+.dropzone {
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background-color: #f0f8ff;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dropzone:hover {
+  background-color: #e9f5ff;
+}
+
+.dropzone.active {
+  border-color: #0056b3;
+}
+
+.dropzone p {
+  margin: 0;
+  font-size: 16px;
+  color: #007bff;
+}
+
+.image-preview {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.image-preview img {
+  max-width: 50%;
+  height: auto;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+}

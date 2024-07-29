@@ -1,17 +1,20 @@
+import React, { useState, useEffect, useCallback } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { emphasize, styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
-
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { useEffect, useState } from "react";
-import Rating from "@mui/material/Rating";
-import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
+import { Alert, Card, Col, Form, Row, Spinner } from "react-bootstrap";
+import Button from "@mui/material/Button";
+import { useDropzone } from "react-dropzone";
+import "../../../../style/ProductUpload.css";
+import Header from "../../components/Header/Header";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
-//breadcrumb code
+// Breadcrumb styling
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -34,14 +37,13 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 const ProductUpload = () => {
   const [categoryVal, setCategoryVal] = useState("");
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
   const { id } = useParams();
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,19 +56,15 @@ const ProductUpload = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
         setProduct(data);
+        setCategoryVal(data.category || "");
         setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching product details:", error);
-        setError(error);
+        setError(error.message);
         setLoading(false);
       });
   }, [id]);
@@ -90,12 +88,12 @@ const ProductUpload = () => {
       }),
     })
       .then(response => response.json())
-      .then(data => {
+      .then(() => {
         if (image) {
           const formData = new FormData();
           formData.append("avatar", image);
 
-          fetch(`http://localhost:3001/products/${id}/avatar`, {
+          return fetch(`http://localhost:3001/products/${id}/avatar`, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -104,93 +102,127 @@ const ProductUpload = () => {
           })
             .then(response => response.json())
             .then(() => {
-              setSuccessMessage("Product updated successfully!");
+              setSuccessMessage("Prodotto modificato con successo!");
               setErrorMessage("");
+              setTimeout(() => {
+                navigate(`/productDetailsAdmin/${id}`);
+              }, 1500);
             })
             .catch(error => {
-              console.error("Error uploading image:", error);
-              setErrorMessage("Error uploading image.");
+              console.error("Errore nel caricamento dell'immagine:", error);
+              setErrorMessage("Errore nel caricamento dell'immagine.");
             });
-        } else {
-          setSuccessMessage("Product updated successfully!");
-          setErrorMessage("");
         }
       })
       .catch(error => {
         console.error("Error updating product:", error);
-        setErrorMessage("Error updating product.");
+        setErrorMessage("Errore nella modifica del prodotto.");
       });
   };
 
-  const handleImageChange = event => {
-    setImage(event.target.files[0]);
-  };
+  const onDrop = useCallback(acceptedFiles => {
+    setImage(acceptedFiles[0]);
+  }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  });
+
+  if (loading) return <Spinner animation="border" />;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <>
+    <div className="main d-flex mt-5">
+      <div className="mt-5">
+        <Header />
+      </div>
+      <div className="mt-5">
+        <Sidebar />
+      </div>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4">
-          <h5 className="mb-0">Product Upload</h5>
+          <h5 className="mb-0">Modifica Prodotto</h5>
           <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
             <StyledBreadcrumb
               component="a"
-              href="#"
+              href="/dashboard"
               label="Dashboard"
+              style={{ cursor: "pointer" }}
               icon={<HomeIcon fontSize="small" />}
             />
             <StyledBreadcrumb
               component="a"
-              label="Products"
-              href="#"
+              href="/productAdmin"
+              label="Lista Prodotti"
+              style={{ cursor: "pointer" }}
               deleteIcon={<ExpandMoreIcon />}
             />
             <StyledBreadcrumb
-              label="Product Upload"
+              label="Modifica Prodotto"
+              style={{ cursor: "pointer" }}
               deleteIcon={<ExpandMoreIcon />}
             />
           </Breadcrumbs>
         </div>
 
-        <form className="form">
-          <div className="row">
-            <div className="col-sm-9">
-              <div className="card p-4">
-                <h5 className="mb-4">Modifica prodotto</h5>
+        <Form>
+          <Row>
+            <Col className="col-sm-9">
+              <Card className="p-4">
+                <h3 className="mb-4 text-center">Modifica prodotto</h3>
+
                 {/* Success and Error Messages */}
                 {successMessage && (
-                  <p style={{ color: "green" }}>{successMessage}</p>
+                  <Alert
+                    className="mb-2 alert-success"
+                    variant="success"
+                    onClose={() => setSuccessMessage("")}
+                    dismissible
+                  >
+                    {successMessage}
+                  </Alert>
                 )}
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
-                <div className="form-group">
-                  <h6>Nome</h6>
-                  <input
+                {errorMessage && (
+                  <Alert
+                    className="mb-2 alert-danger"
+                    variant="danger"
+                    onClose={() => setErrorMessage("")}
+                    dismissible
+                  >
+                    {errorMessage}
+                  </Alert>
+                )}
+
+                <Form.Group className="mb-2" controlId="name">
+                  <Form.Label>Nome</Form.Label>
+                  <Form.Control
                     type="text"
                     value={product.name || ""}
                     onChange={e =>
                       setProduct({ ...product, name: e.target.value })
                     }
+                    required
                   />
-                </div>
+                </Form.Group>
 
-                <div className="form-group">
-                  <h6>Descrizione</h6>
-                  <textarea
-                    rows={5}
-                    cols={10}
+                <Form.Group className="mb-2" controlId="description">
+                  <Form.Label>Descrizione</Form.Label>
+                  <Form.Control
+                    required
+                    placeholder="Descrizione"
+                    type="text"
                     value={product.description || ""}
                     onChange={e =>
                       setProduct({ ...product, description: e.target.value })
                     }
                   />
-                </div>
+                </Form.Group>
 
-                <div className="row">
-                  <div className="col">
-                    <div className="form-group">
+                <Row className="row">
+                  <Col className="col">
+                    <Form.Group className="form-group">
                       <h6>Categoria</h6>
                       <Select
                         value={categoryVal}
@@ -215,45 +247,45 @@ const ProductUpload = () => {
                           Eco-sostenibili
                         </MenuItem>
                       </Select>
-                    </div>
-                  </div>
+                    </Form.Group>
+                  </Col>
 
-                  <div className="col">
-                    <div className="form-group">
+                  <Col>
+                    <Form.Group>
                       <h6>BRAND</h6>
-                      <input
+                      <Form.Control
                         type="text"
                         value={product.brand || ""}
                         placeholder={product.brand}
                         onChange={e =>
-                          setProduct({ ...product, name: e.target.value })
+                          setProduct({ ...product, brand: e.target.value })
                         }
                       />
-                    </div>
-                  </div>
-                </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-                <div className="row">
-                  <div className="col">
-                    <div className="form-group">
+                <Row>
+                  <Col>
+                    <Form.Group>
                       <h6>Prezzo</h6>
-                      <input
+                      <Form.Control
                         type="number"
                         value={product.price || ""}
                         onChange={e =>
                           setProduct({
                             ...product,
-                            regularPrice: e.target.value,
+                            price: e.target.value,
                           })
                         }
                       />
-                    </div>
-                  </div>
+                    </Form.Group>
+                  </Col>
 
-                  <div className="col">
-                    <div className="form-group">
+                  <Col>
+                    <Form.Group>
                       <h6>Prezzo scontato</h6>
-                      <input
+                      <Form.Control
                         type="number"
                         value={product.priceDiscount || ""}
                         onChange={e =>
@@ -263,50 +295,67 @@ const ProductUpload = () => {
                           })
                         }
                       />
-                    </div>
-                  </div>
-                </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-                <div className="row">
-                  <div className="col">
-                    <div className="form-group">
+                <Row>
+                  <Col>
+                    <Form.Group>
                       <h6>In magazzino</h6>
-                      <input
+                      <Form.Control
                         type="number"
                         value={product.inMagazzino || ""}
                         onChange={e =>
-                          setProduct({ ...product, stock: e.target.value })
+                          setProduct({
+                            ...product,
+                            inMagazzino: e.target.value,
+                          })
                         }
                       />
-                    </div>
-                  </div>
+                    </Form.Group>
+                  </Col>
 
-                  <div className="col">
-                    <div className="form-group">
+                  <Col>
+                    <Form.Group>
                       <h6>UPLOAD IMAGE</h6>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                      />
-                    </div>
-                  </div>
-                </div>
+                      <div
+                        {...getRootProps({
+                          className: `dropzone ${isDragActive ? "active" : ""}`,
+                        })}
+                      >
+                        <input {...getInputProps()} />
+                        <p>Trascina l'immagine qui o clicca per selezionare</p>
+                      </div>
+                      <div className="image-preview">
+                        {image && (
+                          <img src={URL.createObjectURL(image)} alt="Preview" />
+                        )}
+                        {!image && product.imageUrl && (
+                          <div>
+                            <span>Immagine Attuale</span>
+                            <img src={product.imageUrl} alt={product.name} />
+                          </div>
+                        )}
+                      </div>
+                    </Form.Group>
+                  </Col>
+                </Row>
 
                 <br />
 
                 <Button
-                  className="btn-blue btn-lg btn-big"
+                  className="w-100 bg-black text-white"
                   onClick={handleSave}
                 >
-                  ICONA &nbsp; PUBLISH AND VIEW
+                  MODIFICA PRODOTTO
                 </Button>
-              </div>
-            </div>
-          </div>
-        </form>
+              </Card>
+            </Col>
+          </Row>
+        </Form>
       </div>
-    </>
+    </div>
   );
 };
 

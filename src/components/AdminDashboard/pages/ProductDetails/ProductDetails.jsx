@@ -3,18 +3,19 @@ import { emphasize, styled } from "@mui/material/styles";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
-
 import { MdBrandingWatermark } from "react-icons/md";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { FaShoppingCart } from "react-icons/fa";
-
 import { BsPatchCheckFill } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { CircularProgress, Typography } from "@mui/material";
+import { Button, Col, Row } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { IoIosPricetag } from "react-icons/io";
+import { RiDiscountPercentFill } from "react-icons/ri";
 
-//breadcrumb code
+// breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -40,6 +41,8 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("authToken");
 
@@ -71,6 +74,10 @@ const ProductDetails = () => {
   if (error)
     return <Typography color="error">Error: {error.message}</Typography>;
 
+  const handleEdit = () => {
+    navigate(`/productUploadAdmin/${product.id}`);
+  };
+
   return (
     <>
       <div className="main d-flex mt-5">
@@ -80,7 +87,7 @@ const ProductDetails = () => {
         <div className="mt-5">
           <Sidebar />
         </div>
-        <div className="right-content ">
+        <div className="right-content w-100">
           <div className="card shadow border-0 w-100 flex-row p-4 res-col">
             <h5 className="mb-0">Prodotto</h5>
 
@@ -107,82 +114,116 @@ const ProductDetails = () => {
           <div className="card productDetailsSEction">
             <div className="row">
               <div className="col-md-5">
-                <div className="sliderWrapper pt-3 pb-3 pl-4 pr-4">
+                <div className="sliderWrapper">
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    width={"100%"}
+                    width={"80%"}
                   />
                 </div>
               </div>
 
-              <div className="col-md-7">
-                <div className=" pt-3 pb-3 pl-4 pr-4">
-                  <h6 className="mb-4">Dettagli</h6>
+              <Col className="col-md-7">
+                <div className=" pt-3">
+                  <h4 className=" fw-bold">Dettagli Prodotto</h4>
+                  <h6 className="mb-4">#{product.id}</h6>
 
                   <h4>{product.name}</h4>
 
                   <div className="productInfo mt-4">
-                    <div className="row mb-2">
-                      <div className="col-sm-3 d-flex align-items-center">
-                        <span className="icon">
+                    <Row className="mb-2">
+                      <Col className="col-sm-3 d-flex align-items-center ">
+                        <span className="icon ">
                           <MdBrandingWatermark />
                         </span>
                         <span className="name">Brand</span>
-                      </div>
+                      </Col>
 
                       <div className="col-sm-9">
                         <span>{product.brand}</span>
                       </div>
-                    </div>
+                    </Row>
 
-                    <div className="row">
-                      <div className="col-sm-3 d-flex align-items-center">
+                    <Row className="mt-3">
+                      <Col className="col-sm-3 d-flex align-items-center">
                         <span className="icon">
                           <BiSolidCategoryAlt />
                         </span>
                         <span className="name">Categoria</span>
-                      </div>
+                      </Col>
 
-                      <div className="col-sm-9">
+                      <Col className="col-sm-9">
                         <span>{product.category}</span>
-                      </div>
-                    </div>
+                      </Col>
+                    </Row>
 
-                    <div className="row">
-                      <div className="col-sm-3 d-flex align-items-center">
+                    <Row className="mt-3">
+                      <Col className="col-sm-3 d-flex align-items-center">
                         <span className="icon">
                           <FaShoppingCart />
                         </span>
                         <span className="name">In magazzino</span>
-                      </div>
+                      </Col>
 
                       <div className="col-sm-9">
                         <span>({product.inMagazzino}) Pz</span>
                       </div>
-                    </div>
+                    </Row>
 
-                    <div className="row">
-                      <div className="col-sm-3 d-flex align-items-center">
+                    <Row className="mt-3">
+                      <Col className="col-sm-3 d-flex align-items-center">
                         <span className="icon">
                           <BsPatchCheckFill />
                         </span>
                         <span className="name">Pubblicato il:</span>
-                      </div>
+                      </Col>
 
-                      <div className="col-sm-9">
+                      <Col className="col-sm-9">
                         <span>{product.createdAt}</span>
-                      </div>
-                    </div>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-sm-3 d-flex align-items-center">
+                        <span className="icon">
+                          <IoIosPricetag />
+                        </span>
+                        <span className="name">Prezzo:</span>
+                      </Col>
+
+                      <Col className="col-sm-9">
+                        <span>€{product.price}</span>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-sm-3 d-flex align-items-center">
+                        <span className="icon">
+                          <RiDiscountPercentFill />
+                        </span>
+                        <span className="name">Sconto:</span>
+                      </Col>
+
+                      <Col className="col-sm-9">
+                        <span>€{product.discount}</span>
+                      </Col>
+                    </Row>
                   </div>
                 </div>
-              </div>
+              </Col>
             </div>
-
-            <div className="p-4">
-              <h6 className="mt-4 mb-3">Descrizione del prodotto</h6>
+            <hr />
+            <div className="p-4 w-100 text-center">
+              <h3 className=" mb-3">Descrizione del prodotto</h3>
               <p>{product.description}</p>
               <br />
+            </div>
+            <div className="p-4">
+              <Button
+                onClick={handleEdit}
+                variant="outline"
+                className="bg-black text-white w-100"
+              >
+                Modifica Prodotto
+              </Button>
             </div>
           </div>
         </div>

@@ -21,6 +21,8 @@ import SuccessPayment from "./components/SuccessPayment";
 import UnsuccessPayment from "./components/UnsuccessPayment";
 import Paypal from "./components/Paypal";
 import ProductsAdmin from "./components/AdminDashboard/pages/Products/ProductsAdmin";
+import CreateProduct from "./components/AdminDashboard/pages/Products/CreateProduct";
+import LoginAdmin from "./components/AdminDashboard/pages/Login/LoginAdmin";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -50,6 +52,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/productUploadAdmin/:id" element={<ProductUpload />} />
         <Route path="/productDetailsAdmin/:id" element={<ProductDetails />} />
+        <Route path="/creaProdotto" element={<CreateProduct />} />
+        <Route path="/loginAdmin" element={<LoginAdmin />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

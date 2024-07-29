@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
@@ -7,19 +7,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Pagination from "@mui/material/Pagination";
 import Button from "@mui/material/Button";
 import { styled, emphasize } from "@mui/material/styles";
-import { FaEye, FaPencilAlt, FaUserCircle } from "react-icons/fa";
+import { FaEye, FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  PaginationItem,
-  Checkbox,
-} from "@mui/material";
+import { Select, MenuItem, FormControl, PaginationItem } from "@mui/material";
 import DashboardBox from "../Dashboard/components/DashboardBox";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { IoMdCart } from "react-icons/io";
+import { GiStarsStack } from "react-icons/gi";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -131,7 +127,7 @@ const ProductsAdmin = ({
         </div>
         <div className="right-content w-100">
           <div className="card shadow border-0 w-100 flex-row p-4">
-            <h5 className="mb-0">Product List</h5>
+            <h5 className="mb-0">Lista Prodotti</h5>
             <Breadcrumbs
               aria-label="breadcrumb"
               className="ml-auto breadcrumbs_"
@@ -140,35 +136,36 @@ const ProductsAdmin = ({
                 component="a"
                 href="/dashboard"
                 label="Dashboard"
+                style={{ cursor: "pointer" }}
                 icon={<HomeIcon fontSize="small" />}
               />
               <StyledBreadcrumb
-                label="Products"
+                label="Lista Prodotti"
+                style={{ cursor: "pointer" }}
                 deleteIcon={<ExpandMoreIcon />}
               />
             </Breadcrumbs>
           </div>
 
-          <div className="row dashboardBoxWrapperRow dashboardBoxWrapperRowV2">
-            <div className="col-md-12">
+          <Row className=" dashboardBoxWrapperRow dashboardBoxWrapperRowV2">
+            <Col className="col-md-12">
               <div className="dashboardBoxWrapper d-flex">
                 <DashboardBox
-                  color={["#1da256", "#48d483"]}
-                  icon={<FaUserCircle />}
+                  color={["#e1950e", "#f3cd29"]}
+                  icon={<GiStarsStack />}
+                  orders={true}
                   grow={true}
                 />
-                <DashboardBox color={["#c012e2", "#eb64fe"]} icon={<FaEye />} />
-                <DashboardBox color={["#2c78e5", "#60aff5"]} icon={<FaEye />} />
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
 
-          <div className="card shadow border-0 p-3 mt-4">
-            <h3 className="hd">Best Selling Products</h3>
+          <Card className=" shadow border-0 p-3 mt-4">
+            <h3 className="hd">Lista Prodotti</h3>
 
-            <div className="row cardFilters mt-3">
-              <div className="col-md-3">
-                <h4>CATEGORY BY</h4>
+            <Row className="row cardFilters mt-3">
+              <Col className="col-md-3">
+                <h4>CATEGORIA</h4>
                 <FormControl size="small" className="w-100">
                   <Select
                     value={catBy}
@@ -192,9 +189,9 @@ const ProductsAdmin = ({
                     <MenuItem value="ECO_SOSTENIBILI">Eco-sostenibili</MenuItem>
                   </Select>
                 </FormControl>
-              </div>
-              <div className="col-md-3">
-                <h4>SORT BY</h4>
+              </Col>
+              <Col className="col-md-3">
+                <h4>ORDINA PER</h4>
                 <FormControl size="small" className="w-100">
                   <Select
                     value={sortOption}
@@ -210,8 +207,8 @@ const ProductsAdmin = ({
                     </MenuItem>
                   </Select>
                 </FormControl>
-              </div>
-            </div>
+              </Col>
+            </Row>
 
             <div className="table-responsive mt-3">
               <table className="table table-bordered table-striped v-align">
@@ -310,7 +307,7 @@ const ProductsAdmin = ({
                 </div>
               )}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </>

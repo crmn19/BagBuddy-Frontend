@@ -1,10 +1,5 @@
-import { FaUserCircle } from "react-icons/fa";
-import { IoMdCart, IoIosTimer } from "react-icons/io";
-import { MdShoppingBag } from "react-icons/md";
+import { IoMdCart } from "react-icons/io";
 import { GiStarsStack } from "react-icons/gi";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Pagination from "@mui/material/Pagination";
 import { useEffect, useState, useCallback } from "react";
 import DashboardBox from "../Dashboard/components/DashboardBox";
@@ -13,6 +8,7 @@ import Chart from "react-google-charts";
 import Header from "../../components/Header/Header";
 import { PaginationItem } from "@mui/material";
 import { Link } from "react-router-dom";
+import { Col } from "react-bootstrap";
 
 const options = {
   backgroundColor: "transparent",
@@ -20,8 +16,6 @@ const options = {
 };
 
 const Dashboard = () => {
-  const [showBy, setShowBy] = useState("");
-  const [catBy, setCatBy] = useState("");
   const [orders, setOrders] = useState([]);
   const [totalSales, setTotalSales] = useState(0);
   const [data, setData] = useState([["Year", "Sales"]]);
@@ -130,30 +124,25 @@ const Dashboard = () => {
       </div>
 
       <div className="right-content w-100">
+        <h1 className="mb-5">Pannello di controllo</h1>
         <div className="row dashboardBoxWrapperRow">
           <div className="col-md-8">
             <div className="dashboardBoxWrapper d-flex">
               <DashboardBox
-                color={["#1da256", "#48d483"]}
-                icon={<FaUserCircle />}
-                grow={true}
-              />
-              <DashboardBox
                 color={["#c012e2", "#eb64fe"]}
                 icon={<IoMdCart />}
-              />
-              <DashboardBox
-                color={["#2c78e5", "#60aff5"]}
-                icon={<MdShoppingBag />}
+                user={true}
               />
               <DashboardBox
                 color={["#e1950e", "#f3cd29"]}
                 icon={<GiStarsStack />}
+                orders={true}
+                grow={true}
               />
             </div>
           </div>
 
-          <div className="col-md-4 pl-0 topPart2">
+          <Col className="col-md-4 pl-0 topPart2">
             <div className="box graphBox">
               <div className="d-flex align-items-center w-100 bottomEle">
                 <h5 className="text-white mb-0 mt-0">Vendite Totali</h5>
@@ -166,7 +155,7 @@ const Dashboard = () => {
 
               <Chart chartType="PieChart" data={data} options={options} />
             </div>
-          </div>
+          </Col>
         </div>
 
         <div className="card shadow border-0 p-3 mt-4">

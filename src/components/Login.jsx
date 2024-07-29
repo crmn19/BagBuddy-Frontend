@@ -5,12 +5,15 @@ import BackgroundImage from "../assets/images/ali-kazal-qPZ2KT9yPpU-unsplash.jpg
 import Logo from "../assets/images/BAGBBUNNY.png";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { RiLockPasswordFill } from "react-icons/ri";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const [showError, setShowError] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async event => {
@@ -68,41 +71,48 @@ const Login = () => {
           </Alert>
         )}
 
-        <Form.Group className="mb-2" controlId="email">
-          <Form.Label>Email address</Form.Label>
+        <Form.Group className="my-4" controlId="email">
           <Form.Control
             type="email"
             value={email}
-            placeholder="Enter email"
+            placeholder="Email"
             onChange={e => setEmail(e.target.value)}
             required
           />
         </Form.Group>
-        <Form.Group className="mb-2" controlId="password">
-          <Form.Label>Password</Form.Label>
+
+        <Form.Group className="my-4 position-relative" controlId="password">
           <Form.Control
-            type="password"
+            type={isShowPassword ? "text" : "password"}
+            className="form-control"
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
           />
-        </Form.Group>
-        <Form.Group className="mb-2" controlId="checkbox">
-          <Form.Check type="checkbox" label="Remember me" />
+          <span
+            className="toggleShowPassword"
+            onClick={() => setIsShowPassword(!isShowPassword)}
+          >
+            {isShowPassword ? <IoMdEyeOff /> : <IoMdEye />}
+          </span>
         </Form.Group>
 
-        <Button className="w-100" variant="primary" type="submit">
+        <Form.Group className="mb-2" controlId="checkbox">
+          <Form.Check type="checkbox" label="Ricordami" />
+        </Form.Group>
+
+        <Button className="w-100 mb-3  bg-dark text-white" type="submit">
           Log In
         </Button>
 
         <div className="d-grid justify-content-center">
-          <Button className="text-muted px-0" variant="link">
+          <Link to="/forgot-password" className="text-muted px-0">
             Password dimenticata?
-          </Button>
+          </Link>
         </div>
         <div className="d-grid text-center mt-2">
-          Non sei già registrato?
+          Non sei registrato?
           <Link to="/registration" className="text-muted px-0">
             Registrati
           </Link>
