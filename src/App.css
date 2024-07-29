@@ -10,10 +10,6 @@ body {
   overflow-x: hidden;
 }
 
-body.dark {
-  background: #071739 !important;
-}
-
 ::-webkit-scrollbar {
   width: 5px !important;
   height: 5px !important;
@@ -166,10 +162,6 @@ header .logo span {
   font-weight: 800;
   font-size: 24px;
 }
-body.dark header .logo span {
-  color: #fff !important;
-  opacity: 0.9;
-}
 
 header button.rounded-circle {
   min-width: 40px !important;
@@ -186,13 +178,6 @@ header button.rounded-circle svg {
 
 header button.rounded-circle:hover svg {
   color: #0858f7 !important;
-}
-
-body.dark header button.rounded-circle {
-  background: #112755 !important ;
-}
-body.dark header button.rounded-circle svg {
-  color: #fff !important;
 }
 
 header .part2 {
@@ -288,17 +273,6 @@ body.dark .searchBox svg {
   opacity: 0.7;
 }
 
-body.dark .myAcc .userInfo * {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-body.dark .MuiPaper-elevation {
-  background-color: #12254e !important;
-}
-body.dark .MuiPaper-elevation li *,
-body.dark .MuiPaper-elevation li {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-
 #account-menu li {
   font-size: 14px !important;
   padding: 12px 15px !important;
@@ -321,18 +295,11 @@ body.dark .MuiPaper-elevation li {
   font-size: 17px;
   font-weight: 600;
 }
-body.dark .dropdown_list .head h4 {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
+
 .dropdown_list li.MuiButtonBase-root {
   background: #ebf6ff !important;
   color: #000 !important;
   padding: 10px 15px !important;
-}
-
-body.dark .dropdown_list li.MuiButtonBase-root {
-  background-color: #12254e !important;
-  background: #12254e !important;
 }
 
 .dropdown_list li.MunotificationsiButtonBase-root:hover {
@@ -393,10 +360,6 @@ body.dark .dropdown_list li.MuiButtonBase-root {
   overflow-x: hidden;
   padding-bottom: 40px;
   transition: all 0.3s;
-}
-
-body.dark .main .sidebarWrapper .sidebar {
-  background: #112143 !important;
 }
 
 .main .sidebarWrapper.toggle .sidebar {
@@ -759,19 +722,6 @@ body.dark .logoutWrapper .logoutBox {
   color: #403e57;
 }
 
-body.dark .card {
-  background: #1b2b4d !important;
-  border: 1px solid #10214b !important;
-}
-body.dark .card .hd {
-  font-size: 18px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.8);
-}
-body.dark .cardFilters .col-md-3 h4 {
-  color: rgba(255, 255, 255, 0.8);
-}
-
 .cardFilters .col-md-3 h4 {
   font-size: 14px;
   font-weight: 600;
@@ -789,20 +739,6 @@ p {
   color: #403e57;
 }
 
-body.dark .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root,
-body.dark h1,
-body.dark h2,
-body.dark h3,
-body.dark h4,
-body.dark h5,
-body.dark h6,
-body.dark p,
-body.dark .MuiInputBase-root,
-body.dark .MuiInputBase-root,
-body.dark .MuiSvgIcon-root {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-
 body.dark .MuiOutlinedInput-notchedOutline {
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
@@ -815,10 +751,6 @@ p {
 
 body.light p {
   font-weight: 400 !important;
-}
-
-body.dark .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .table-responsive::-webkit-scrollbar-thumb {
@@ -837,7 +769,7 @@ body.dark .table-striped tbody tr:nth-of-type(odd) {
 }
 
 .table .thead-dark th {
-  background-color: #1866ee !important;
+  background-color: #3270db !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   font-size: 13px !important;
 }
@@ -863,27 +795,6 @@ body.dark .table-striped tbody tr:nth-of-type(odd) {
 }
 .table tbody .actions button.error {
   background: rgba(241, 17, 51, 0.2) !important;
-}
-
-body.dark .table tbody .actions button.secondary {
-  background-color: #de2fff !important;
-}
-body.dark .table tbody .actions button.secondary svg {
-  color: #fff !important;
-}
-
-body.dark .table tbody .actions button.success {
-  background-color: #27bf68 !important;
-}
-body.dark .table tbody .actions button.success svg {
-  color: #fff !important;
-}
-
-body.dark .table tbody .actions button.error {
-  background-color: #ff6179 !important;
-}
-body.dark .table tbody .actions button.error svg {
-  color: #fff !important;
 }
 
 .table tbody .actions button svg {
@@ -954,28 +865,8 @@ table.v-align td .productBox {
   margin-bottom: 0px;
 }
 
-body.dark table td {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
 .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
   background-color: #0858f7 !important;
-}
-
-body.dark .table-bordered td,
-.table-bordered th {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-body.dark .MuiPaginationItem-root {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-body.dark .MuiPaginationItem-root:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
-
-body.dark .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
-  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .loginSection {
@@ -984,19 +875,6 @@ body.dark .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root {
   padding: 35px 25px;
   background: #fff;
   position: relative;
-}
-
-body.dark .loginSection {
-  background: #112142 !important;
-}
-body.dark form .form-control {
-  background: #071739 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-body.dark form .form-control::-webkit-input-placeholder {
-  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .loginPatern {
@@ -1089,29 +967,6 @@ body.dark form .form-control::-webkit-input-placeholder {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 50%;
 }
-
-body.dark .loginSection .loginBox .wrapper .or span.line {
-  background: rgba(255, 255, 255, 0.3) !important;
-}
-
-body.dark .loginSection .loginBox .wrapper .or span.txt {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.loginWithGoogle {
-  text-transform: capitalize !important;
-  font-weight: bold !important;
-}
-
-body.dark .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-body.dark .css-1c99szj-MuiRating-icon {
-  color: rgba(255, 255, 255, 0.6) !important;
-}
-
 .signUpSection {
   background: #f1f1f1 !important;
   padding: 0px 0px;
@@ -1128,10 +983,6 @@ body.dark .css-1c99szj-MuiRating-icon {
   border: 0px !important;
   background: transparent !important;
   padding-top: 10px !important;
-}
-
-body.dark .signUpSection .loginBox {
-  background: #1b2b4d !important;
 }
 
 .signUpSection .part1 {
@@ -1152,21 +1003,6 @@ body.dark .signUpSection .loginBox {
 
 .breadcrumbs_ a:hover {
   text-decoration: none !important;
-}
-body.dark .breadcrumbs_ a {
-  background-color: #112143 !important;
-}
-body.dark .breadcrumbs_ a * {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-body.dark .breadcrumbs_ li .MuiChip-filled {
-  background-color: #112143 !important;
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
-body.dark .css-1wuw8dw-MuiBreadcrumbs-separator {
-  background-color: #112143 !important;
-  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .sliderSml .slick-current .item {
@@ -1433,13 +1269,6 @@ body.dark .form .form-group textarea {
   font-size: 14px;
 }
 
-body.dark .imgUploadBox .uploadBox {
-  background: #2b3c5f;
-}
-body.dark .imgUploadBox .uploadBox * {
-  color: rgba(255, 255, 255, 0.7) !important;
-}
-
 .imgUploadBox .uploadBox .remove {
   position: absolute;
   top: -7px;
@@ -1466,10 +1295,6 @@ body.dark .imgUploadBox .uploadBox * {
 
 .imgUploadBox .uploadBox:hover {
   background: #f1f1f1;
-}
-
-body.dark .imgUploadBox .uploadBox {
-  border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .imgUploadBox .uploadBox img {
@@ -1502,4 +1327,10 @@ body.dark .imgUploadBox .uploadBox {
 
 .MuiRating-root * {
   color: #faaf00 !important;
+}
+
+g text {
+  fill: white;
+  font-size: 0.8vw;
+  font-weight: 700;
 }

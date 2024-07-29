@@ -5,7 +5,7 @@ const Paypal = () => {
     method: "paypal",
     amount: 10.0,
     currency: "USD",
-    description: "",
+    description: "ciao",
     intent: "sale",
   });
 
@@ -36,10 +36,10 @@ const Paypal = () => {
       });
 
       if (response.ok) {
-        const paymentData = await response.json();
-        window.location.href = paymentData;
+        const { approval_url } = await response.json();
+        window.location.href = approval_url;
       } else {
-        throw new Error("Failed to create payment");
+        throw new Error("Errore nella procedura di pagamento");
       }
     } catch (error) {
       setError(error.message || "Errore nella procedura di pagamento.");
