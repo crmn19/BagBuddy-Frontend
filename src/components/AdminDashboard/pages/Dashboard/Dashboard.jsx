@@ -108,7 +108,7 @@ const Dashboard = () => {
 
   const handleStatusChange = orderId => {
     setSelectedOrderId(orderId);
-    setOpen(true); // Apri il modale
+    setOpen(true);
   };
 
   const handleConfirm = () => {

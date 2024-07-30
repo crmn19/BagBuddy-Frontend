@@ -25,6 +25,7 @@ import LoginAdmin from "./components/AdminDashboard/pages/Login/LoginAdmin";
 import AccountSettings from "./components/AdminDashboard/pages/AccountSettings/AccountSettings";
 import RiepilogoOrdine from "./components/UtenteDashboard/RiepilogoOrdine";
 import MultiStepForm from "./components/StepFormConfirmOrder/MultiStepForm";
+import ChangePassword from "./components/AdminDashboard/pages/AccountSettings/ChangePassword";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -51,6 +52,8 @@ function App() {
         <Route path="/paypal" element={<Paypal />} />
         <Route path="/riepilogo-ordine" element={<RiepilogoOrdine />} />
         <Route path="/form" element={<MultiStepForm />} />
+        <Route path="/myAccount" element={<AccountSettings />} />
+        <Route path="/modificaPassword" element={<ChangePassword />} />
         {/* ADMIN */}
         <Route path="/productAdmin" element={<ProductsAdmin />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -58,7 +61,6 @@ function App() {
         <Route path="/productDetailsAdmin/:id" element={<ProductDetails />} />
         <Route path="/creaProdotto" element={<CreateProduct />} />
         <Route path="/loginAdmin" element={<LoginAdmin />} />
-        <Route path="/profileAdmin" element={<AccountSettings />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

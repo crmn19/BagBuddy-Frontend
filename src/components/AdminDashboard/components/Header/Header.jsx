@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../../assets/images/BAGBBUNNY.png";
 import Button from "@mui/material/Button";
 import { MdOutlineLightMode } from "react-icons/md";
@@ -18,6 +18,7 @@ import { Container } from "react-bootstrap";
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
   const [isOpennotificationDrop, setisOpennotificationDrop] = useState(false);
   const openMyAcc = Boolean(anchorEl);
   const openNotifications = Boolean(isOpennotificationDrop);
@@ -37,6 +38,14 @@ const Header = () => {
 
   const handleClosenotificationsDrop = () => {
     setisOpennotificationDrop(false);
+  };
+
+  const handleCloseMyAccDropProfile = () => {
+    navigate("/myAccount");
+  };
+
+  const handleCloseMyAccDropPassword = () => {
+    navigate("/modificaPassword");
   };
   useEffect(() => {
     const fetchCliente = async () => {
@@ -154,13 +163,13 @@ const Header = () => {
                   transformOrigin={{ horizontal: "right", vertical: "top" }}
                   anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                 >
-                  <MenuItem onClick={handleCloseMyAccDrop}>
+                  <MenuItem onClick={handleCloseMyAccDropProfile}>
                     <ListItemIcon>
                       <PersonAdd fontSize="small" />
                     </ListItemIcon>
                     My Account
                   </MenuItem>
-                  <MenuItem onClick={handleCloseMyAccDrop}>
+                  <MenuItem onClick={handleCloseMyAccDropPassword}>
                     <ListItemIcon>
                       <IoShieldHalfSharp />
                     </ListItemIcon>
