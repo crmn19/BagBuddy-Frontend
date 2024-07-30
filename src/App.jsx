@@ -24,6 +24,7 @@ import CreateProduct from "./components/AdminDashboard/pages/Products/CreateProd
 import LoginAdmin from "./components/AdminDashboard/pages/Login/LoginAdmin";
 import AccountSettings from "./components/AdminDashboard/pages/AccountSettings/AccountSettings";
 import RiepilogoOrdine from "./components/UtenteDashboard/RiepilogoOrdine";
+import MultiStepForm from "./components/StepFormConfirmOrder/MultiStepForm";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -49,6 +50,7 @@ function App() {
         <Route path="/pay/cancel" element={<UnsuccessPayment />} />
         <Route path="/paypal" element={<Paypal />} />
         <Route path="/riepilogo-ordine" element={<RiepilogoOrdine />} />
+        <Route path="/form" element={<MultiStepForm />} />
         {/* ADMIN */}
         <Route path="/productAdmin" element={<ProductsAdmin />} />
         <Route path="/dashboard" element={<Dashboard />} />

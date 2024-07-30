@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap"; // Importa Button da react-bootstrap
-import "bootstrap/dist/css/bootstrap.min.css"; // Assicurati di avere Bootstrap incluso nel tuo progetto
+import { Button } from "react-bootstrap";
 
 const SuccessPayment = () => {
   const [loading, setLoading] = useState(true);

@@ -15,11 +15,21 @@ import {
   Box,
   Snackbar,
   Alert,
+  Divider,
 } from "@mui/material";
 import MyNavbar from "../MyNavbar";
 import { useNavigate } from "react-router-dom";
+import { Apartment, Home, LocationOn, PostAdd } from "@mui/icons-material";
+import { BiBuilding } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setMetodoSpedizione } from "../../redux/actions";
 
 const DatiOrdineCustomers = () => {
+  const dispatch = useDispatch();
+  const metodoSpedizioneRedux = useSelector(
+    state => state.shipping.metodoSpedizione
+  );
+
   const [indirizzo, setIndirizzo] = useState({
     via: "",
     cap: "",
@@ -34,9 +44,8 @@ const DatiOrdineCustomers = () => {
   const [selectedProvinceName, setSelectedProvinceName] = useState("");
   const [selectedComune, setSelectedComune] = useState("");
   const [selectedComuneName, setSelectedComuneName] = useState("");
-  const [metodoSpedizione, setMetodoSpedizione] = useState("standard");
   const [error, setError] = useState("");
-  const [adressDetails, setAddressDetails] = useState("");
+  const [addressDetails, setAddressDetails] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken") || "");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -45,6 +54,7 @@ const DatiOrdineCustomers = () => {
     fetchAddressDetails();
     fetchProvinces();
   }, [token]);
+
   const fetchAddressDetails = async () => {
     const token = localStorage.getItem("authToken");
     const url = "http://localhost:3001/indirizzi/find";
@@ -60,7 +70,6 @@ const DatiOrdineCustomers = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setAddressDetails(data);
       } else {
         throw new Error("Errore nel recupero dei dettagli dell'indirizzo.");
@@ -91,6 +100,7 @@ const DatiOrdineCustomers = () => {
       setLoading(false);
     }
   };
+
   const handleProvinceChange = async event => {
     const provinceId = event.target.value;
     const selectedProvince = province.find(prov => prov.id === provinceId);
@@ -137,10 +147,6 @@ const DatiOrdineCustomers = () => {
     }));
   };
 
-  const handleMetodoSpedizioneChange = event => {
-    setMetodoSpedizione(event.target.value);
-  };
-
   const handleSubmit = async event => {
     event.preventDefault();
 
@@ -154,7 +160,6 @@ const DatiOrdineCustomers = () => {
 
     setLoading(true);
     try {
-      // Invio dell'indirizzo al backend
       const addressResponse = await fetch(
         "http://localhost:3001/indirizzi/create",
         {
@@ -181,63 +186,116 @@ const DatiOrdineCustomers = () => {
     }
   };
 
+  const handleMetodoSpedizioneChange = event => {
+    const selectedMetodo = event.target.value;
+    dispatch(setMetodoSpedizione(selectedMetodo));
+  };
+
   return (
     <>
       <MyNavbar />
       <Container maxWidth="sm">
-        {setAddressDetails ? (
+        {addressDetails ? (
           <>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom className="mb-4">
               Il tuo indirizzo
             </Typography>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Via"
-                  value={adressDetails.via}
-                  disabled
-                />
+              <Grid item xs={12} display="flex" alignItems="center">
+                <Home />
+                <Typography variant="body1" component="div" sx={{ ml: 1 }}>
+                  <strong>Via:</strong> {addressDetails.via}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="CAP"
-                  value={adressDetails.cap}
-                  disabled
-                />
+              <Grid item xs={12} display="flex" alignItems="center">
+                <PostAdd />
+                <Typography variant="body1" component="div" sx={{ ml: 1 }}>
+                  <strong>CAP:</strong> {addressDetails.cap}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Provincia"
-                  value={adressDetails.provincia.name}
-                  disabled
-                />
+              <Grid item xs={12} display="flex" alignItems="center">
+                <BiBuilding />
+                <Typography variant="body1" component="div" sx={{ ml: 1 }}>
+                  <strong>Provincia:</strong> {addressDetails.provincia?.name}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Comune"
-                  value={adressDetails.comune.name}
-                  disabled
-                />
+              <Grid item xs={12} display="flex" alignItems="center">
+                <LocationOn />
+                <Typography variant="body1" component="div" sx={{ ml: 1 }}>
+                  <strong>Comune:</strong> {addressDetails.comune?.name}
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Numero Civico"
-                  value={adressDetails.civico}
-                  disabled
-                />
+              <Grid item xs={12} display="flex" alignItems="center">
+                <Apartment />
+                <Typography variant="body1" component="div" sx={{ ml: 1 }}>
+                  <strong>Numero Civico:</strong> {addressDetails.civico}
+                </Typography>
               </Grid>
             </Grid>
+            <Grid item xs={12} className="mt-4">
+              <Divider />
+              <Typography variant="h6" gutterBottom>
+                Opzioni di consegna
+              </Typography>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="metodoSpedizione"
+                  name="metodoSpedizione"
+                  value={metodoSpedizioneRedux}
+                  onChange={handleMetodoSpedizioneChange}
+                >
+                  <FormControlLabel
+                    value="standard"
+                    control={<Radio />}
+                    label={
+                      <Box>
+                        <div className="d-flex">
+                          <Typography className="fw-bold">
+                            Consegna Standard
+                          </Typography>
+                          <Typography className="mx-5 text-dark-emphasis">
+                            € 6,00
+                          </Typography>
+                          <Typography className="text-dark-emphasis">
+                            3-5 giorni lavorativi*
+                          </Typography>
+                        </div>
+                      </Box>
+                    }
+                  />
+                  <FormControlLabel
+                    value="express"
+                    control={<Radio />}
+                    label={
+                      <Box>
+                        <div className="d-flex">
+                          <Typography className="fw-bold">
+                            Consegna Express
+                          </Typography>
+                          <Typography className="mx-5 text-dark-emphasis">
+                            € 12,00
+                          </Typography>
+                          <Typography className="text-dark-emphasis">
+                            2-4 giorni lavorativi*
+                          </Typography>
+                        </div>
+                      </Box>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
             <Button
-              variant="contained"
-              color="primary"
+              className="bg-black text-white w-100"
               onClick={() => navigate("/riepilogo-ordine")}
             >
               Continua
+            </Button>
+            <Button
+              className="bg-black text-white w-100 mt-3"
+              onClick={() => navigate("/riepilogo-ordine")}
+            >
+              Modifica indirizzo
             </Button>
           </>
         ) : (
@@ -338,7 +396,7 @@ const DatiOrdineCustomers = () => {
                     <RadioGroup
                       aria-label="metodoSpedizione"
                       name="metodoSpedizione"
-                      value={metodoSpedizione}
+                      value={metodoSpedizioneRedux}
                       onChange={handleMetodoSpedizioneChange}
                     >
                       <FormControlLabel

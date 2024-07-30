@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import MyNavbar from "../MyNavbar";
 import { BsPaypal } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const RiepilogoOrdine = () => {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -27,7 +28,22 @@ const RiepilogoOrdine = () => {
     description: null,
     intent: "sale",
   });
+  const metodoSpedizione = useSelector(
+    state => state.shipping.metodoSpedizione
+  );
+  const shippingCosts = {
+    standard: 8.0,
+    express: 12.0,
+  };
+  const shippingCost = shippingCosts[metodoSpedizione] || 0;
   const navigate = useNavigate();
+
+  const calculateTotalPrice = products => {
+    return products.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0
+    );
+  };
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -47,15 +63,14 @@ const RiepilogoOrdine = () => {
           const data = await response.json();
           if (data.length > 0) {
             const latestOrder = data[data.length - 1];
-            console.log(latestOrder);
             setOrderDetails(latestOrder);
             setIdOrder(latestOrder.orderId);
-            console.log(idOrder);
-            const totalAmount = calculateTotalPrice(latestOrder.products) + 8;
+            const totalAmount =
+              calculateTotalPrice(latestOrder.products) + shippingCost;
             setOrder({
               ...order,
               amount: totalAmount.toFixed(2),
-              description: `Ordine #${latestOrder.id}`,
+              description: `Ordine #${latestOrder.orderId}`,
             });
           } else {
             setError("Nessun ordine trovato.");
@@ -111,7 +126,6 @@ const RiepilogoOrdine = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setAddressDetails(data);
         } else {
           throw new Error("Errore nel recupero dei dettagli dell'indirizzo.");
@@ -124,15 +138,11 @@ const RiepilogoOrdine = () => {
     fetchOrderDetails();
     fetchAddressDetails();
     fetchCustomer();
-  }, []);
+  }, [metodoSpedizione]);
 
-  const calculateTotalPrice = products => {
-    if (!products || products.length === 0) return 0;
-    return products.reduce(
-      (total, product) => total + product.price * product.quantity,
-      0
-    );
-  };
+  const totalPrice = orderDetails
+    ? calculateTotalPrice(orderDetails.products) + shippingCost
+    : 0;
 
   const handlePayment = async () => {
     const token = localStorage.getItem("authToken");
@@ -192,8 +202,8 @@ const RiepilogoOrdine = () => {
 
   const completePaymentAndUpdateOrder = async () => {
     try {
-      await handlePayment();
       await handleUpdateOrder();
+      await handlePayment();
     } catch (error) {
       console.error(
         "Errore durante il pagamento o l'aggiornamento dell'ordine",
@@ -206,9 +216,6 @@ const RiepilogoOrdine = () => {
     <>
       <MyNavbar />
       <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Dettagli spedizione
-        </Typography>
         {loading && (
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
@@ -297,14 +304,17 @@ const RiepilogoOrdine = () => {
                     <Box>
                       <Typography variant="body1">
                         Subtotale: €{" "}
-                        {calculateTotalPrice(orderDetails.products)}
+                        {calculateTotalPrice(orderDetails.products).toFixed(2)}
                       </Typography>
                       <Typography variant="body1">
-                        Consegna Standard: € 8,00
+                        Consegna{" "}
+                        {metodoSpedizione === "express"
+                          ? "Express"
+                          : "Standard"}
+                        : € {shippingCost.toFixed(2)}
                       </Typography>
                       <Typography variant="h6" sx={{ mt: 2 }}>
-                        Totale Ordine: €{" "}
-                        {calculateTotalPrice(orderDetails.products) + 8}
+                        Totale Ordine: € {totalPrice.toFixed(2)}
                       </Typography>
                     </Box>
                   </>

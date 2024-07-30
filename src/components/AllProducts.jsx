@@ -125,7 +125,7 @@ const AllProducts = () => {
                 fullWidth
                 variant="outlined"
               >
-                <MenuItem value="price">Ordina: Prezzo crescente</MenuItem>ß
+                <MenuItem value="price">Ordina: Prezzo crescente</MenuItem>
                 <MenuItem value="createdAt">Ordina: Data di aggiunta</MenuItem>
               </Select>
             </Col>

@@ -19,7 +19,7 @@ const Products = ({
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const url = new URL("http://localhost:3001/products");
-    url.searchParams.append("page", currentPage - 1); 
+    url.searchParams.append("page", currentPage - 1);
     url.searchParams.append("size", size);
     url.searchParams.append("sortBy", sortBy);
     if (search) url.searchParams.append("search", search);
@@ -66,7 +66,10 @@ const Products = ({
               className="text-decoration-none"
             >
               <Card className="card-products">
-                <Card.Img variant="top" src={product.imageUrl} />
+                <div className=" ratio ratio-1x1">
+                  <Card.Img variant="top" src={product.imageUrl} />
+                </div>
+
                 <Card.Body>
                   <Card.Text>{product.name}</Card.Text>
                   <Card.Title className="fw-bold">{product.price} €</Card.Title>

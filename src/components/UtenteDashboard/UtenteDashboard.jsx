@@ -64,6 +64,7 @@ const UtenteDashboard = () => {
           );
 
           const carrelliData = await carrelliResponse.json();
+          console.log(carrelliData);
           setCarrelli(carrelliData);
         }
       } catch (error) {
@@ -95,6 +96,15 @@ const UtenteDashboard = () => {
     }
   };
 
+  // Funzione per calcolare il totale
+  const calculateTotal = products => {
+    return products.reduce((total, item) => {
+      const price = parseFloat(item.price) || 0;
+      const quantity = parseInt(item.quantity, 10) || 0;
+      return total + price * quantity;
+    }, 0);
+  };
+
   return (
     <>
       <MyNavbar />
@@ -124,7 +134,8 @@ const UtenteDashboard = () => {
                         Data: {carrello.date}
                       </Typography>
                       <Typography variant="body1">
-                        Totale: {carrello.price.toFixed(2)} €
+                        Totale Provvisorio:{" "}
+                        {calculateTotal(carrello.products).toFixed(2)} €
                       </Typography>
                       <Typography variant="body1">Prodotti:</Typography>
                       <List>
@@ -156,7 +167,8 @@ const UtenteDashboard = () => {
                                     variant="body2"
                                     color="textSecondary"
                                   >
-                                    {" | "}Prezzo: {item.price.toFixed(2)} € |
+                                    {" | "}Prezzo:{" "}
+                                    {parseFloat(item.price).toFixed(2)} € |
                                     Quantità: {item.quantity} | In Stock:{" "}
                                     {item.inMagazzino}
                                   </Typography>
@@ -187,7 +199,6 @@ const UtenteDashboard = () => {
               ))
             ) : (
               <Container>
-                {" "}
                 <Typography className="my-4">
                   Non hai carrelli attivi.
                 </Typography>
@@ -210,14 +221,7 @@ const UtenteDashboard = () => {
                         Status: {ordine.status}
                       </Typography>
                       <Typography variant="body1">
-                        Totale:{" "}
-                        {ordine.products
-                          .reduce(
-                            (total, item) => total + item.price * item.quantity,
-                            0
-                          )
-                          .toFixed(2)}{" "}
-                        €
+                        Totale: €{ordine.total}
                       </Typography>
                       <Typography variant="body1">Prodotti:</Typography>
                       <List>

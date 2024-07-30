@@ -9,15 +9,16 @@ import {
   Button,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "../CartContext";
 import headerLogo from "../assets/images/BAGBBUNNY.png";
 import hamburgerIcon from "../assets/icons/hamburger.svg";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useSelector } from "react-redux";
+import { Badge } from "@mui/material";
 const MyNavbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const authToken = localStorage.getItem("authToken");
-  const { cartItems } = useCart();
+  const cartItems = useSelector(state => state.cart.cart);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -85,7 +86,9 @@ const MyNavbar = () => {
                   to="/dashboardUtente"
                   className="underLine2 mt-2"
                 >
-                  <ShoppingCartIcon />
+                  <Badge badgeContent={cartItems} color="success">
+                    <ShoppingCartIcon />
+                  </Badge>
                 </Nav.Link>
                 <NavDropdown
                   id="nav-dropdown-dark-example"

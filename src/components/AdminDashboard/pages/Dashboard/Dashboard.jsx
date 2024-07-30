@@ -9,6 +9,12 @@ import Header from "../../components/Header/Header";
 import { PaginationItem } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Col } from "react-bootstrap";
+import { FaPen } from "react-icons/fa";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 
 const options = {
   backgroundColor: "transparent",
@@ -21,13 +27,13 @@ const Dashboard = () => {
   const [data, setData] = useState([["Year", "Sales"]]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [open, setOpen] = useState(false); // Stato per la visibilità del modale
+  const [selectedOrderId, setSelectedOrderId] = useState(null); // ID dell'ordine selezionato
 
   const token = localStorage.getItem("authToken");
-  const url = new URL("http://localhost:3001/orders");
-  url.searchParams.append("page", currentPage - 1);
 
-  const fetchOrders = () => {
-    fetch(url, {
+  const fetchOrders = useCallback(() => {
+    fetch(`http://localhost:3001/orders?page=${currentPage - 1}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,13 +47,13 @@ const Dashboard = () => {
         return response.json();
       })
       .then(data => {
-        const orders = data.content || [];
-        setOrders(orders);
+        setOrders(data.content || []);
         setTotalPages(data.totalPages);
       })
       .catch(error => console.error("Error fetching orders:", error));
-  };
-  const fetchTotal = () => {
+  }, [currentPage, token]);
+
+  const fetchTotal = useCallback(() => {
     fetch("http://localhost:3001/orders", {
       method: "GET",
       headers: {
@@ -68,7 +74,7 @@ const Dashboard = () => {
         setTotalSales(totalSales);
       })
       .catch(error => console.error("Error fetching orders:", error));
-  };
+  }, [token]);
 
   const fetchSalesData = useCallback(
     year => {
@@ -88,7 +94,6 @@ const Dashboard = () => {
           return response.json();
         })
         .then(salesData => {
-          console.log(`Sales data for ${year}: ${salesData}`);
           setData(prevData => {
             const newData = prevData.filter(
               entry => entry[0] !== year.toString()
@@ -101,14 +106,44 @@ const Dashboard = () => {
     [token]
   );
 
+  const handleStatusChange = orderId => {
+    setSelectedOrderId(orderId);
+    setOpen(true); // Apri il modale
+  };
+
+  const handleConfirm = () => {
+    if (selectedOrderId) {
+      fetch(`http://localhost:3001/orders/status/${selectedOrderId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify("SHIPPED"),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(
+              `Error updating order status: ${response.statusText}`
+            );
+          }
+          return response.json();
+        })
+        .then(() => {
+          setOpen(false);
+          fetchOrders();
+        })
+        .catch(error => console.error("Error updating order status:", error));
+    }
+  };
+
   useEffect(() => {
     if (token) {
       fetchOrders();
       fetchTotal();
-      const years = [2022, 2023, 2024];
-      years.forEach(year => fetchSalesData(year));
+      [2022, 2023, 2024].forEach(year => fetchSalesData(year));
     }
-  }, [token, currentPage]);
+  }, [fetchOrders, fetchTotal, fetchSalesData, token, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -196,7 +231,15 @@ const Dashboard = () => {
                     <td>{order.method}</td>
                     <td>{order.paymentMethod}</td>
                     <td>€{order.price}</td>
-                    <td>{order.status}</td>
+                    <td>
+                      {order.status}
+                      {order.status === "AWAITING_SHIPMENT" && (
+                        <FaPen
+                          onClick={() => handleStatusChange(order.id)}
+                          style={{ cursor: "pointer", marginLeft: "10px" }}
+                        />
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -220,6 +263,20 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Modale di conferma */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Conferma</DialogTitle>
+        <DialogContent>Vuoi contrassegnare come spedito?</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Annulla
+          </Button>
+          <Button onClick={handleConfirm} color="primary">
+            Conferma
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
