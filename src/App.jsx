@@ -27,6 +27,9 @@ import RiepilogoOrdine from "./components/UtenteDashboard/RiepilogoOrdine";
 import MultiStepForm from "./components/StepFormConfirmOrder/MultiStepForm";
 import ChangePassword from "./components/AdminDashboard/pages/AccountSettings/ChangePassword";
 import ModificaIndirizzo from "./components/UtenteDashboard/Indirizzo";
+import Footer from "./components/Footer";
+import About from "./components/About";
+import Contact from "./components/Contact";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -43,6 +46,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/products" element={<AllProducts />} />
 
         <Route path="/product/:id" element={<ProductDetailsCustomer />} />

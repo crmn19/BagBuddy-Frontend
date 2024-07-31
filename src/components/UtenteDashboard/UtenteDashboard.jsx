@@ -22,6 +22,7 @@ import {
 import MyNavbar from "../MyNavbar";
 import { useNavigate } from "react-router-dom";
 import { CheckboxIcon } from "@chakra-ui/react";
+import Footer from "../Footer";
 
 const defaultTheme = createTheme();
 
@@ -180,7 +181,7 @@ const UtenteDashboard = () => {
       <MyNavbar />
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} className="mb-5">
           <Snackbar
             open={openSnack}
             autoHideDuration={3000}
@@ -388,6 +389,7 @@ const UtenteDashboard = () => {
           </Dialog>
         </Container>
       </ThemeProvider>
+      <Footer />
     </>
   );
 };

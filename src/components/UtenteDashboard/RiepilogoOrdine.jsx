@@ -29,7 +29,6 @@ const RiepilogoOrdine = () => {
     standard: 8.0,
     express: 12.0,
   };
-  const shippingCost = shippingCosts[metodoSpedizione] || 0;
 
   const calculateTotalPrice = products => {
     return products.reduce(
@@ -63,8 +62,12 @@ const RiepilogoOrdine = () => {
               ? data[data.length - 1]
               : data;
             localStorage.setItem("orderDetails", JSON.stringify(orderData));
+            const subtotal = calculateTotalPrice(orderData.products);
             const amount =
-              calculateTotalPrice(orderData.products) + shippingCost;
+              subtotal > 85
+                ? subtotal // Spedizione gratuita
+                : subtotal + (shippingCosts[metodoSpedizione] || 0);
+
             localStorage.setItem("paymentAmount", amount.toFixed(2));
             setOrderDetails(orderData);
           } else {
@@ -136,11 +139,14 @@ const RiepilogoOrdine = () => {
     };
 
     fetchData();
-  }, [orderId]);
+  }, [orderId, metodoSpedizione]);
 
-  const totalPrice = orderDetails
-    ? calculateTotalPrice(orderDetails.products) + shippingCost
+  const subtotal = orderDetails
+    ? calculateTotalPrice(orderDetails.products)
     : 0;
+
+  const shippingCost = subtotal > 85 ? 0 : shippingCosts[metodoSpedizione] || 0;
+  const totalPrice = subtotal + shippingCost;
 
   const handlePayment = async () => {
     const token = localStorage.getItem("authToken");
@@ -265,8 +271,7 @@ const RiepilogoOrdine = () => {
                     <Divider sx={{ my: 2 }} />
                     <Box>
                       <Typography variant="body1">
-                        Subtotale: €{" "}
-                        {calculateTotalPrice(orderDetails.products).toFixed(2)}
+                        Subtotale: € {subtotal.toFixed(2)}
                       </Typography>
                       <Typography variant="body1">
                         Consegna{" "}

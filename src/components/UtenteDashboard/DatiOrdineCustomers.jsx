@@ -77,7 +77,7 @@ const DatiOrdineCustomers = () => {
         throw new Error("Errore nel recupero dei dettagli dell'indirizzo.");
       }
     } catch (error) {
-      setError(error.message || "Errore nella richiesta.");
+      throw new Error(error.message || "Errore nella richiesta.");
     }
   };
 

@@ -25,6 +25,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/actions";
+import Footer from "./Footer";
 
 const ADD_TO_CART_URL = "http://localhost:3001/customers/add/";
 const REMOVE_FROM_CART_URL = "http://localhost:3001/customers/remove/";
@@ -345,6 +346,7 @@ const ProductDetailsCustomer = () => {
           )}
         </Box>
       </Drawer>
+      <Footer />
     </>
   );
 };

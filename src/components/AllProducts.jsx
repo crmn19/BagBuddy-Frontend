@@ -4,6 +4,7 @@ import { Typography, Select, MenuItem, Button } from "@mui/material";
 import Products from "./Products";
 import { ButtonGroup, Col, Container, Row } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 const AllProducts = () => {
   const [sortBy, setSortBy] = useState("price"); // Default sorting by price
@@ -139,6 +140,7 @@ const AllProducts = () => {
           />
         </Container>
       </Container>
+      <Footer />
     </>
   );
 };

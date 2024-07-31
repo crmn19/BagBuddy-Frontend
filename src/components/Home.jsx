@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import Hero from "./Hero";
 import MyNavbar from "./MyNavbar";
 
@@ -19,7 +20,7 @@ const Home = () => {
       <section className=" border-2 border-x-0 sm:px-16 px-8 sm:py-24 py-12"></section>
 
       <section className="sm:px-16 px-8 sm:pt-24 pt-12 pb-8">
-        {/* <Footer /> */}
+        <Footer />
       </section>
     </main>
   );
