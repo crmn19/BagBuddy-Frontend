@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -14,6 +14,8 @@ import {
   Box,
   Drawer,
   IconButton,
+  Dialog,
+  DialogTitle,
 } from "@mui/material";
 import MyNavbar from "./MyNavbar";
 import { GridExpandMoreIcon } from "@mui/x-data-grid";
@@ -37,6 +39,7 @@ const ProductDetailsCustomer = () => {
   const [cartTotal, setCartTotal] = useState(0);
   const cartItems = useSelector(state => state.cart.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -281,7 +284,11 @@ const ProductDetailsCustomer = () => {
           {Array.isArray(cartProducts) && cartProducts.length > 0 ? (
             <>
               {cartProducts.map(cartProduct => (
-                <Card key={cartProduct.productId} sx={{ mb: 2 }}>
+                <Card
+                  key={cartProduct.productId}
+                  sx={{ mb: 2 }}
+                  className="my-3"
+                >
                   <CardMedia
                     component="img"
                     alt={cartProduct.name}
@@ -299,6 +306,7 @@ const ProductDetailsCustomer = () => {
                     </Typography>
                     <Button
                       variant="outlined"
+                      className="w-100 mt-2"
                       onClick={() =>
                         handleRemoveFromCart(cartProduct.productId)
                       }
@@ -318,10 +326,17 @@ const ProductDetailsCustomer = () => {
               <Typography
                 variant="h6"
                 sx={{ mt: 2 }}
-                className="fw-bbold text-center"
+                className="fw-bold text-center"
               >
-                Totale: {cartTotal} €
+                Totale parziale: {cartTotal} €
               </Typography>
+              <Button
+                variant="contained"
+                className="bg-dark text-white w-100 mt-4"
+                onClick={() => navigate("/dashboardUtente")}
+              >
+                Procedi all'acquisto
+              </Button>
             </>
           ) : (
             <Typography variant="body2">

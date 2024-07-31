@@ -7,7 +7,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import Chart from "react-google-charts";
 import Header from "../../components/Header/Header";
 import { PaginationItem } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Col } from "react-bootstrap";
 import { FaPen } from "react-icons/fa";
 import Dialog from "@mui/material/Dialog";
@@ -15,6 +15,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import { jwtDecode } from "jwt-decode";
 
 const options = {
   backgroundColor: "transparent",
@@ -27,10 +28,33 @@ const Dashboard = () => {
   const [data, setData] = useState([["Year", "Sales"]]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [open, setOpen] = useState(false); // Stato per la visibilità del modale
-  const [selectedOrderId, setSelectedOrderId] = useState(null); // ID dell'ordine selezionato
-
+  const [open, setOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
+
+  useEffect(() => {
+    if (!token) {
+      // Se il token non è presente, reindirizza l'utente alla pagina di login
+      alert("Non sei autenticato. Effettua il login.");
+      navigate("/login");
+    } else {
+      try {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.role !== "ADMIN") {
+          // Se l'utente non è un amministratore, reindirizza alla pagina di login
+          alert("Non sei autorizzato ad accedere a questa pagina.");
+          navigate("/login");
+        }
+      } catch (error) {
+        // Se c'è un errore nella decodifica del token (ad esempio, se è malformato)
+        console.error("Errore nella decodifica del token:", error);
+        alert("Token non valido. Effettua di nuovo il login.");
+        localStorage.removeItem("authToken"); // Rimuove il token non valido
+        navigate("/login");
+      }
+    }
+  }, [token, navigate]);
 
   const fetchOrders = useCallback(() => {
     fetch(`http://localhost:3001/orders?page=${currentPage - 1}`, {
@@ -194,7 +218,10 @@ const Dashboard = () => {
         </div>
 
         <div className="card shadow border-0 p-3 mt-4">
-          <h3 className="hd">Lista Ordini</h3>
+          <h3 className="hd">
+            {" "}
+            {orders.length > 0 ? "Lista Ordini" : "Nessun ordine disponibile"}
+          </h3>
 
           <div className="table-responsive mt-3">
             <table className="table table-bordered table-striped v-align">

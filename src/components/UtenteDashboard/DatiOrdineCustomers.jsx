@@ -26,6 +26,7 @@ import { setMetodoSpedizione } from "../../redux/actions";
 
 const DatiOrdineCustomers = () => {
   const dispatch = useDispatch();
+  const [ndirizzoId, setIndirizzoId] = useState("");
   const metodoSpedizioneRedux = useSelector(
     state => state.shipping.metodoSpedizione
   );
@@ -71,6 +72,7 @@ const DatiOrdineCustomers = () => {
       if (response.ok) {
         const data = await response.json();
         setAddressDetails(data);
+        setIndirizzoId(data.id);
       } else {
         throw new Error("Errore nel recupero dei dettagli dell'indirizzo.");
       }
@@ -293,7 +295,9 @@ const DatiOrdineCustomers = () => {
             </Button>
             <Button
               className="bg-black text-white w-100 mt-3"
-              onClick={() => navigate("/riepilogo-ordine")}
+              onClick={() =>
+                navigate(`/modifica-indirizzo/${addressDetails.id}`)
+              }
             >
               Modifica indirizzo
             </Button>

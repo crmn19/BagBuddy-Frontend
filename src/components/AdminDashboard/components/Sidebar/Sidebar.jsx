@@ -2,9 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { MdDashboard } from "react-icons/md";
-import { FaProductHunt, FaCartArrowDown, FaBell } from "react-icons/fa";
+import { FaProductHunt, FaCartArrowDown, FaList } from "react-icons/fa";
 import { IoIosSettings, IoMdLogOut } from "react-icons/io";
-import { Collapse, List, ListItemButton } from "@mui/material";
+import { AiFillProduct } from "react-icons/ai";
+import {
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+} from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 const Sidebar = () => {
@@ -14,100 +22,70 @@ const Sidebar = () => {
   const handleClick = index => {
     setOpenSubmenu(openSubmenu === index ? null : index);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/loginAdmin");
   };
 
   return (
-    <div className="sidebar">
-      <ul style={{ listStyle: "none" }}>
-        <li>
-          <Link to="/dashboard">
-            <Button className={`w-100 ${openSubmenu === null ? "active" : ""}`}>
-              <span className="icon">
-                <MdDashboard />
-              </span>
-              Dashboard
-            </Button>
-          </Link>
-        </li>
-        <li>
-          <Button
-            className={`w-100 ${openSubmenu === 1 ? "active" : ""}`}
-            onClick={() => handleClick(1)}
-          >
-            <span className="icon mx-2">
-              <FaProductHunt />
-            </span>
-            Prodotti
-            <span className="arrow">
-              {openSubmenu === 1 ? <ExpandLess /> : <ExpandMore />}
-            </span>
-          </Button>
-          <Collapse in={openSubmenu === 1} timeout="auto" unmountOnExit>
-            <List className="submenu">
-              <Collapse in={openSubmenu === 1} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 8 }}>
-                    <Link to="/productAdmin">Lista prodotti</Link>
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 8 }}>
-                    <Link to="/creaProdotto">Crea prodotto</Link>
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            </List>
-          </Collapse>
-        </li>
-        <li>
-          <Link to="/">
-            <Button
-              className={`w-100 ${openSubmenu === 1 ? "active" : ""}`}
-              onClick={() => handleClick(1)}
-            >
-              <span className="icon mx-2">
-                <FaCartArrowDown />
-              </span>
-              Ordini
-              <span className="arrow">
-                {openSubmenu === 1 ? <ExpandLess /> : <ExpandMore />}
-              </span>
-            </Button>
-          </Link>
-        </li>
+    <div className="sidebar mt-4 mx-4">
+      <List
+        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+      >
+        <ListItemButton component={Link} to="/dashboard">
+          <ListItemIcon>
+            <MdDashboard />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
 
-        <li>
-          <Link to="/">
-            <Button
-              className={`w-100 ${openSubmenu === 1 ? "active" : ""}`}
-              onClick={() => handleClick(1)}
+        <ListItemButton onClick={() => handleClick(0)}>
+          <ListItemIcon>
+            <FaProductHunt />
+          </ListItemIcon>
+          <ListItemText primary="Prodotti" />
+          {openSubmenu === 0 ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openSubmenu === 0} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/products/create"
+              sx={{ pl: 4 }}
             >
-              <span className="icon mx-2">
-                <FaBell />
-              </span>
-              Notifiche
-              <span className="arrow">
-                {openSubmenu === 1 ? <ExpandLess /> : <ExpandMore />}
-              </span>
-            </Button>
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            <Button className="w-100">
-              <span className="icon mx-2">
-                <IoIosSettings />
-              </span>
-              Impostazioni
-            </Button>
-          </Link>
-        </li>
-      </ul>
+              <ListItemIcon>
+                <AiFillProduct />
+              </ListItemIcon>
+              <ListItemText primary="Crea prodotto" />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/products/list" sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <FaList />
+              </ListItemIcon>
+              <ListItemText primary="Lista prodotti" />
+            </ListItemButton>
+          </List>
+        </Collapse>
+        <ListItemButton component={Link} to="/orders">
+          <ListItemIcon>
+            <FaCartArrowDown />
+          </ListItemIcon>
+          <ListItemText primary="Ordini" />
+        </ListItemButton>
+        <ListItemButton component={Link} to="/settings">
+          <ListItemIcon>
+            <IoIosSettings />
+          </ListItemIcon>
+          <ListItemText primary="Impostazioni" />
+        </ListItemButton>
+      </List>
 
       <br />
 
-      <div className="logoutWrapper">
+      <div className="logoutWrapper mt-5">
         <div className="logoutBox">
           <Button variant="contained" onClick={handleLogout}>
             <IoMdLogOut /> Logout

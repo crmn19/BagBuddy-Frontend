@@ -26,6 +26,7 @@ import AccountSettings from "./components/AdminDashboard/pages/AccountSettings/A
 import RiepilogoOrdine from "./components/UtenteDashboard/RiepilogoOrdine";
 import MultiStepForm from "./components/StepFormConfirmOrder/MultiStepForm";
 import ChangePassword from "./components/AdminDashboard/pages/AccountSettings/ChangePassword";
+import ModificaIndirizzo from "./components/UtenteDashboard/Indirizzo";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -47,6 +48,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetailsCustomer />} />
         <Route path="/dashboardUtente" element={<UtenteDashboard />} />
         <Route path="/order" element={<DatiOrdineCustomers />} />
+        <Route path="/order/:id" element={<DatiOrdineCustomers />} />
         <Route path="pay/success" element={<SuccessPayment />} />
         <Route path="/pay/cancel" element={<UnsuccessPayment />} />
         <Route path="/paypal" element={<Paypal />} />
@@ -54,12 +56,13 @@ function App() {
         <Route path="/form" element={<MultiStepForm />} />
         <Route path="/myAccount" element={<AccountSettings />} />
         <Route path="/modificaPassword" element={<ChangePassword />} />
+        <Route path="/modifica-indirizzo/:id" element={<ModificaIndirizzo />} />
         {/* ADMIN */}
-        <Route path="/productAdmin" element={<ProductsAdmin />} />
+        <Route path="/products/list" element={<ProductsAdmin />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/productUploadAdmin/:id" element={<ProductUpload />} />
         <Route path="/productDetailsAdmin/:id" element={<ProductDetails />} />
-        <Route path="/creaProdotto" element={<CreateProduct />} />
+        <Route path="/products/create" element={<CreateProduct />} />
         <Route path="/loginAdmin" element={<LoginAdmin />} />
 
         <Route path="*" element={<NotFound />} />

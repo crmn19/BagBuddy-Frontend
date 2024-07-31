@@ -9,34 +9,27 @@ import {
   Alert,
   Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import MyNavbar from "../MyNavbar";
 import { BsPaypal } from "react-icons/bs";
+import MyNavbar from "../MyNavbar";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const RiepilogoOrdine = () => {
-  const [orderDetails, setOrderDetails] = useState(null);
+  const { orderId } = useParams(); // Ottieni l'ID dall'URL
   const [addressDetails, setAddressDetails] = useState(null);
   const [customer, setCustomer] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [idOrder, setIdOrder] = useState("");
   const [error, setError] = useState("");
-  const [order, setOrder] = useState({
-    method: "paypal",
-    amount: null,
-    currency: "EUR",
-    description: null,
-    intent: "sale",
-  });
   const metodoSpedizione = useSelector(
     state => state.shipping.metodoSpedizione
   );
+
   const shippingCosts = {
     standard: 8.0,
     express: 12.0,
   };
   const shippingCost = shippingCosts[metodoSpedizione] || 0;
-  const navigate = useNavigate();
 
   const calculateTotalPrice = products => {
     return products.reduce(
@@ -48,7 +41,11 @@ const RiepilogoOrdine = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       const token = localStorage.getItem("authToken");
-      const url = "http://localhost:3001/orders/customer";
+      let url = "http://localhost:3001/orders/customer";
+
+      if (orderId) {
+        url = `http://localhost:3001/orders/find/${orderId}`;
+      }
 
       try {
         const response = await fetch(url, {
@@ -61,17 +58,15 @@ const RiepilogoOrdine = () => {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.length > 0) {
-            const latestOrder = data[data.length - 1];
-            setOrderDetails(latestOrder);
-            setIdOrder(latestOrder.orderId);
-            const totalAmount =
-              calculateTotalPrice(latestOrder.products) + shippingCost;
-            setOrder({
-              ...order,
-              amount: totalAmount.toFixed(2),
-              description: `Ordine #${latestOrder.orderId}`,
-            });
+          if (data) {
+            const orderData = Array.isArray(data)
+              ? data[data.length - 1]
+              : data;
+            localStorage.setItem("orderDetails", JSON.stringify(orderData));
+            const amount =
+              calculateTotalPrice(orderData.products) + shippingCost;
+            localStorage.setItem("paymentAmount", amount.toFixed(2));
+            setOrderDetails(orderData);
           } else {
             setError("Nessun ordine trovato.");
           }
@@ -80,8 +75,6 @@ const RiepilogoOrdine = () => {
         }
       } catch (error) {
         setError(error.message || "Errore nella richiesta.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -106,8 +99,6 @@ const RiepilogoOrdine = () => {
         }
       } catch (error) {
         setError(error.message || "Errore nella richiesta.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -135,10 +126,17 @@ const RiepilogoOrdine = () => {
       }
     };
 
-    fetchOrderDetails();
-    fetchAddressDetails();
-    fetchCustomer();
-  }, [metodoSpedizione]);
+    const fetchData = async () => {
+      await Promise.all([
+        fetchOrderDetails(),
+        fetchCustomer(),
+        fetchAddressDetails(),
+      ]);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [orderId]);
 
   const totalPrice = orderDetails
     ? calculateTotalPrice(orderDetails.products) + shippingCost
@@ -146,6 +144,13 @@ const RiepilogoOrdine = () => {
 
   const handlePayment = async () => {
     const token = localStorage.getItem("authToken");
+    const order = {
+      method: "paypal",
+      amount: totalPrice.toFixed(2),
+      currency: "EUR",
+      description: `Ordine #${orderDetails?.id}`,
+      intent: "sale",
+    };
 
     try {
       const response = await fetch("http://localhost:3001/pay", {
@@ -166,49 +171,6 @@ const RiepilogoOrdine = () => {
     } catch (error) {
       setError(error.message || "Errore nella procedura di pagamento.");
       console.error("Errore nella procedura di pagamento", error);
-    }
-  };
-
-  const handleUpdateOrder = async () => {
-    const token = localStorage.getItem("authToken");
-    const updatedOrderDetails = {
-      method: order.method,
-      amount: order.amount,
-      currency: order.currency,
-      description: order.description,
-      intent: order.intent,
-    };
-
-    try {
-      const response = await fetch(`http://localhost:3001/orders/${idOrder}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedOrderDetails),
-      });
-
-      if (response.ok) {
-        alert("Ordine aggiornato con successo!");
-      } else {
-        throw new Error("Errore nell'aggiornamento dell'ordine.");
-      }
-    } catch (error) {
-      setError(error.message || "Errore nella procedura di aggiornamento.");
-      console.error("Errore nella procedura di aggiornamento", error);
-    }
-  };
-
-  const completePaymentAndUpdateOrder = async () => {
-    try {
-      await handleUpdateOrder();
-      await handlePayment();
-    } catch (error) {
-      console.error(
-        "Errore durante il pagamento o l'aggiornamento dell'ordine",
-        error
-      );
     }
   };
 
@@ -329,7 +291,7 @@ const RiepilogoOrdine = () => {
         )}
         <Button
           className="bg-black text-white w-100 mt-5"
-          onClick={completePaymentAndUpdateOrder}
+          onClick={handlePayment}
         >
           <BsPaypal style={{ marginRight: "8px" }} />
           Paga con Paypal

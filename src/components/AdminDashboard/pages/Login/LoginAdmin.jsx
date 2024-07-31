@@ -37,14 +37,19 @@ const LoginAdmin = () => {
         const { token } = await response.json();
         localStorage.setItem("authToken", token);
 
-        const decodedToken = jwtDecode(token).sub;
-        console.log(decodedToken);
-        const userRole = decodedToken;
-        console.log(userRole);
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.role;
 
-        navigate("/dashboard");
+        if (userRole === "ADMIN") {
+          navigate("/dashboard");
+        } else {
+          setResponseMessage(
+            "Non sei autorizzato ad accedere a questa pagina!"
+          );
+          setShowError(true);
+        }
       } else {
-        throw new Error("Invalid email or password.");
+        throw new Error("Email o password non validi.");
       }
     } catch (error) {
       setResponseMessage(error.message);
@@ -79,7 +84,7 @@ const LoginAdmin = () => {
               )}
               <div
                 className={`form-group position-relative ${
-                  inputIndex === 0 && "focus"
+                  inputIndex === 0 ? "focus" : ""
                 }`}
               >
                 <span className="icon">
@@ -102,7 +107,7 @@ const LoginAdmin = () => {
 
               <div
                 className={`form-group position-relative ${
-                  inputIndex === 1 && "focus"
+                  inputIndex === 1 ? "focus" : ""
                 }`}
               >
                 <span className="icon">
@@ -138,7 +143,7 @@ const LoginAdmin = () => {
                   <span className="txt">o</span>
                   <span className="line"></span>
                 </div>
-                <Link to={"/forgot-password"} className="link">
+                <Link to="/forgot-password" className="link">
                   Password dimenticata?
                 </Link>
               </div>
@@ -149,7 +154,7 @@ const LoginAdmin = () => {
             <span className="text-center">
               Non hai un account?
               <br />
-              <Link to={"/signUp"} className="link color ml-2">
+              <Link to="/signUp" className="link color ml-2">
                 Contatta un amministratore della pagina
               </Link>
             </span>

@@ -43,6 +43,10 @@ const Header = () => {
   const handleCloseMyAccDropProfile = () => {
     navigate("/myAccount");
   };
+  const handleCloseMyAccDropLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/loginAdmin");
+  };
 
   const handleCloseMyAccDropPassword = () => {
     navigate("/modificaPassword");
@@ -175,7 +179,7 @@ const Header = () => {
                     </ListItemIcon>
                     Reset Password
                   </MenuItem>
-                  <MenuItem onClick={handleCloseMyAccDrop}>
+                  <MenuItem onClick={handleCloseMyAccDropLogout}>
                     <ListItemIcon>
                       <Logout fontSize="small" />
                     </ListItemIcon>

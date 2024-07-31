@@ -13,16 +13,26 @@ import {
   Divider,
   Box,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
 } from "@mui/material";
 import MyNavbar from "../MyNavbar";
 import { useNavigate } from "react-router-dom";
+import { CheckboxIcon } from "@chakra-ui/react";
 
 const defaultTheme = createTheme();
 
 const UtenteDashboard = () => {
   const [cliente, setCliente] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
   const [ordini, setOrdini] = useState([]);
   const [carrelli, setCarrelli] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken") || "");
   const navigate = useNavigate();
 
@@ -36,44 +46,85 @@ const UtenteDashboard = () => {
           },
         });
 
-        const clienteData = await response.json();
-        setCliente(clienteData);
+        if (response.ok) {
+          const clienteData = await response.json();
+          setCliente(clienteData);
 
-        if (clienteData && clienteData.id) {
-          const ordiniResponse = await fetch(
-            `http://localhost:3001/customers/ordini`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+          if (clienteData && clienteData.id) {
+            const [ordiniResponse, carrelliResponse] = await Promise.all([
+              fetch("http://localhost:3001/customers/ordini", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }),
+              fetch("http://localhost:3001/customers/cart", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }),
+            ]);
+
+            if (ordiniResponse.ok) {
+              const ordiniData = await ordiniResponse.json();
+              setOrdini(ordiniData);
             }
-          );
 
-          const ordiniData = await ordiniResponse.json();
-          setOrdini(ordiniData);
-
-          const carrelliResponse = await fetch(
-            `http://localhost:3001/customers/cart`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+            if (carrelliResponse.ok) {
+              const carrelliData = await carrelliResponse.json();
+              setCarrelli(carrelliData);
             }
-          );
-
-          const carrelliData = await carrelliResponse.json();
-          console.log(carrelliData);
-          setCarrelli(carrelliData);
+          }
+        } else {
+          throw new Error("Errore nel caricamento dei dati del cliente");
         }
       } catch (error) {
-        console.error("Errore nel caricamento dei dati del cliente", error);
+        console.error(error);
       }
     };
 
     fetchCliente();
   }, [token]);
+
+  const handleDelete = async () => {
+    if (selectedOrderId) {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/orders/${selectedOrderId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Errore durante l'eliminazione dell'ordine");
+        }
+        setAlert(true);
+        setOpenSnack(true);
+        setOpen(false);
+        setSelectedOrderId(null);
+        const updatedOrdiniResponse = await fetch(
+          "http://localhost:3001/customers/ordini",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const updatedOrdiniData = await updatedOrdiniResponse.json();
+        setOrdini(updatedOrdiniData);
+      } catch (error) {
+        console.error("Errore durante l'eliminazione dell'ordine", error);
+        alert("Errore durante l'eliminazione dell'ordine.");
+      }
+    }
+  };
 
   const handleCheckout = async cartId => {
     try {
@@ -86,7 +137,6 @@ const UtenteDashboard = () => {
       });
 
       if (response.ok) {
-        const orderData = await response.json();
         navigate("/order");
       } else {
         console.error("Errore nella creazione dell'ordine");
@@ -96,7 +146,6 @@ const UtenteDashboard = () => {
     }
   };
 
-  // Funzione per calcolare il totale
   const calculateTotal = products => {
     return products.reduce((total, item) => {
       const price = parseFloat(item.price) || 0;
@@ -105,19 +154,46 @@ const UtenteDashboard = () => {
     }, 0);
   };
 
+  const handleContinueOrder = orderId => {
+    navigate(`/order/${orderId}`);
+  };
+
+  const handleOpenDeleteDialog = orderId => {
+    setSelectedOrderId(orderId);
+    setOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpen(false);
+    setSelectedOrderId(null);
+  };
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
+
   return (
     <>
       <MyNavbar />
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Snackbar
+            open={openSnack}
+            autoHideDuration={3000}
+            onClose={handleCloseSnack}
+            message="Ordine eliminato con successo!"
+          />
           <Typography
             variant="h5"
             align="start"
             gutterBottom
             className="fw-bold my-3"
           >
-            Ciao, {cliente ? cliente.nome : ""} {cliente ? cliente.cognome : ""}
+            Ciao, {cliente ? `${cliente.nome} ${cliente.cognome}` : "Utente"}
           </Typography>
 
           <Typography variant="h5" gutterBottom className="fw-bold">
@@ -263,6 +339,27 @@ const UtenteDashboard = () => {
                           </ListItem>
                         ))}
                       </List>
+                      {ordine.status === "PENDING" && (
+                        <Box mt={2}>
+                          <Button
+                            variant="contained"
+                            className="bg-dark text-white"
+                            onClick={() => handleContinueOrder(ordine.orderId)}
+                          >
+                            Prosegui con l'ordine
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() =>
+                              handleOpenDeleteDialog(ordine.orderId)
+                            }
+                            style={{ marginLeft: 8 }}
+                          >
+                            Elimina
+                          </Button>
+                        </Box>
+                      )}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -273,6 +370,22 @@ const UtenteDashboard = () => {
               </Container>
             )}
           </Grid>
+
+          <Dialog open={open} onClose={handleCloseDeleteDialog}>
+            <DialogTitle>Elimina</DialogTitle>
+            <DialogContent>
+              Sei sicuro di voler eliminare questo ordine? <br />
+              L'azione è irreversibile.
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDeleteDialog} color="primary">
+                Annulla
+              </Button>
+              <Button onClick={handleDelete} color="primary">
+                Conferma
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Container>
       </ThemeProvider>
     </>
