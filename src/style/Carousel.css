@@ -11,6 +11,9 @@
   position: relative;
   overflow: hidden;
 }
+#skills p {
+  font-weight: 800 !important;
+}
 
 .carousel-card-skill {
   display: flex;

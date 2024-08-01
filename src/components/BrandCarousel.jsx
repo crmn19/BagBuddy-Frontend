@@ -40,9 +40,6 @@ const BrandCarousel = () => {
   return (
     <>
       <div id="skillPage">
-        <h2 className="text-center border-top pt-3 element-to-watch">
-          I nostri brand
-        </h2>
         <div id="skills" className="carousel-container-skill element-to-watch">
           <div className="carousel-track-skill">
             {skills.map((skill, id) => (
@@ -54,7 +51,7 @@ const BrandCarousel = () => {
                   height={80}
                   className="mt-2"
                 />
-                <p className="mt-2 fs-6">{skill.name}</p>
+                <p className="mt-2 fw-bold">{skill.name}</p>
               </div>
             ))}
           </div>
