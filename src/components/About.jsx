@@ -47,7 +47,7 @@ const About = () => {
       <Container
         maxWidth="xxl"
         sx={{
-          backgroundColor: "#212529",
+          backgroundColor: "#FAF1DA",
           py: 0,
           px: 0,
         }}

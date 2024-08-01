@@ -1,0 +1,53 @@
+#skillPage {
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+}
+
+#skills {
+  margin-top: 5vh;
+  width: 100%;
+  padding-left: 15px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-card-skill {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 10%;
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+
+.carousel-card-skill:hover {
+  transform: scale(1.1);
+}
+
+.carousel-track-skill {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  width: calc(500%);
+  animation: slide 40s linear infinite;
+}
+
+.carousel-track-skill:hover {
+  animation-play-state: paused;
+}
+
+.carousel-track-skill img {
+  padding: 0.5vh;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

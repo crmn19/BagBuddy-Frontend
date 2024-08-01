@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -7,6 +7,10 @@ import {
   CardContent,
   Box,
   IconButton,
+  Collapse,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -32,8 +36,19 @@ const contactData = [
     id: 3,
     title: "Chiedi",
     description:
-      "Hai domande? Visita le nostre FAQ per trovare le risposte alle nostre domande più frequenti",
+      "Hai domande? Visita le nostre FAQ per trovare le risposte alle domande più frequenti",
     icon: <QuestionMarkIcon sx={{ fontSize: 60 }} />,
+    faq: [
+      {
+        question: "Qual è il vostro orario di apertura?",
+        answer: "Siamo aperti dalle 9:00 alle 18:00 dal lunedì al venerdì.",
+      },
+      {
+        question: "Come posso contattare il supporto?",
+        answer: "Puoi contattarci via email o telefono.",
+      },
+      // Aggiungi altre FAQ se necessario
+    ],
   },
   {
     id: 4,
@@ -44,19 +59,25 @@ const contactData = [
 ];
 
 const Contact = () => {
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  const handleCardClick = id => {
+    setExpandedCard(expandedCard === id ? null : id);
+  };
+
   return (
     <>
       <MyNavbar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ my: 5, mb: 5 }}>
         <Typography
           variant="h4"
           align="center"
           gutterBottom
-          className="mb-5 fw-bold"
+          className="my-5 fw-bold"
         >
           CONTATTACI
         </Typography>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} className="my-5">
           {contactData.map(item => (
             <Grid item xs={12} md={6} lg={3} key={item.id}>
               <Card
@@ -76,6 +97,7 @@ const Contact = () => {
                     color: "#C9182E",
                   },
                 }}
+                onClick={() => handleCardClick(item.id)}
               >
                 <Box
                   className="hoverBorder"
@@ -115,7 +137,9 @@ const Contact = () => {
                   <Typography variant="h6" component="div" gutterBottom>
                     {item.title}
                   </Typography>
-                  <Typography variant="body2">{item.description}</Typography>
+                  <Typography variant="body2" className="mb-5">
+                    {item.description}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
