@@ -1,7 +1,21 @@
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  IconButton,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { IoMdCart } from "react-icons/io";
 import { GiStarsStack } from "react-icons/gi";
 import Pagination from "@mui/material/Pagination";
-import { useEffect, useState, useCallback } from "react";
 import DashboardBox from "../Dashboard/components/DashboardBox";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Chart from "react-google-charts";
@@ -30,27 +44,35 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     if (!token) {
-      // Se il token non è presente, reindirizza l'utente alla pagina di login
-      alert("Non sei autenticato. Effettua il login.");
+      setSnackbarMessage("Non sei autenticato. Effettua il login.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
       navigate("/login");
     } else {
       try {
         const decodedToken = jwtDecode(token);
         if (decodedToken.role !== "ADMIN") {
-          // Se l'utente non è un amministratore, reindirizza alla pagina di login
-          alert("Non sei autorizzato ad accedere a questa pagina.");
+          setSnackbarMessage(
+            "Non sei autorizzato ad accedere a questa pagina."
+          );
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
           navigate("/login");
         }
       } catch (error) {
-        // Se c'è un errore nella decodifica del token (ad esempio, se è malformato)
         console.error("Errore nella decodifica del token:", error);
-        alert("Token non valido. Effettua di nuovo il login.");
-        localStorage.removeItem("authToken"); // Rimuove il token non valido
+        setSnackbarMessage("Token non valido. Effettua di nuovo il login.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        localStorage.removeItem("authToken");
         navigate("/login");
       }
     }
@@ -74,7 +96,12 @@ const Dashboard = () => {
         setOrders(data.content || []);
         setTotalPages(data.totalPages);
       })
-      .catch(error => console.error("Error fetching orders:", error));
+      .catch(error => {
+        console.error("Error fetching orders:", error);
+        setSnackbarMessage("Errore durante il recupero degli ordini.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   }, [currentPage, token]);
 
   const fetchTotal = useCallback(() => {
@@ -97,7 +124,12 @@ const Dashboard = () => {
         const totalSales = orders.reduce((sum, order) => sum + order.price, 0);
         setTotalSales(totalSales);
       })
-      .catch(error => console.error("Error fetching orders:", error));
+      .catch(error => {
+        console.error("Error fetching orders:", error);
+        setSnackbarMessage("Errore durante il recupero delle vendite totali.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   }, [token]);
 
   const fetchSalesData = useCallback(
@@ -125,7 +157,12 @@ const Dashboard = () => {
             return [...newData, [year.toString(), salesData]];
           });
         })
-        .catch(error => console.error("Error fetching sales data:", error));
+        .catch(error => {
+          console.error("Error fetching sales data:", error);
+          setSnackbarMessage("Errore durante il recupero dei dati di vendita.");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        });
     },
     [token]
   );
@@ -157,7 +194,14 @@ const Dashboard = () => {
           setOpen(false);
           fetchOrders();
         })
-        .catch(error => console.error("Error updating order status:", error));
+        .catch(error => {
+          console.error("Error updating order status:", error);
+          setSnackbarMessage(
+            "Errore durante l'aggiornamento dello stato dell'ordine."
+          );
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        });
     }
   };
 
@@ -304,6 +348,21 @@ const Dashboard = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar per feedback */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

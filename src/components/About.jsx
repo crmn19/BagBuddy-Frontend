@@ -53,15 +53,16 @@ const About = () => {
         }}
       >
         <Grid container spacing={0}>
-          {" "}
           {chiSiamoData.map(item => (
             <Grid item xs={12} key={item.id}>
               <Card
                 sx={{
                   display: "flex",
-                  flexDirection:
-                    item.textPosition === "left" ? "row" : "row-reverse",
-                  height: "70vh",
+                  flexDirection: {
+                    xs: "column", // stacked vertically on small screens
+                    md: item.textPosition === "left" ? "row" : "row-reverse",
+                  },
+                  height: { xs: "auto", md: "70vh" }, // auto height on small screens
                   boxShadow: "none",
                   border: "none",
                   backgroundColor: "#FAF1DA",
@@ -74,28 +75,24 @@ const About = () => {
                     flexDirection: "column",
                     justifyContent: "center",
                     textAlign: "left",
+                    px: { xs: 2, md: 5 },
                   }}
                 >
-                  <span className="p-5">
-                    <Typography
-                      variant="h3"
-                      component="div"
-                      gutterBottom
-                      className="fw-bold"
-                    >
-                      {item.titolo}
-                    </Typography>
-                    <Typography className="p-2 fw-bold">
-                      {item.paragrafo}
-                    </Typography>
-                  </span>
+                  <Typography
+                    variant="h3"
+                    component="div"
+                    gutterBottom
+                    className="fw-bold"
+                  >
+                    {item.titolo}
+                  </Typography>
+                  <Typography className="fw-bold">{item.paragrafo}</Typography>
                 </CardContent>
                 <CardMedia
                   component="img"
                   sx={{
-                    width: "50%",
-                    height: "100%",
-                    display: { xs: "none", md: "block" },
+                    width: { xs: "100%", md: "50%" },
+                    height: { xs: "auto", md: "100%" },
                     objectFit: "cover",
                   }}
                   image={item.image}

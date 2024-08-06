@@ -7,9 +7,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-dark text-white py-5">
+    <footer className="bg-dark text-white py-4">
       <Container>
-        {/* Logo and Navigation Links */}
         <Row className="mb-4">
           <Col className="text-center">
             <Link to="/">
@@ -50,8 +49,6 @@ const Footer = () => {
             </Nav>
           </Col>
         </Row>
-
-        {/* Social Media and Copyright */}
         <Row>
           <Col className="text-center text-sm-start mb-3 mb-sm-0">
             <div className="mb-2">

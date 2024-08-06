@@ -91,7 +91,7 @@ const MyNavbar = () => {
                   </Badge>
                 </Nav.Link>
                 <NavDropdown
-                  id="nav-dropdown-dark-example"
+                  id="nav-dropdown-dark-example1"
                   title="Profilo"
                   menuVariant="dark"
                   className="underLine2 mt-2"

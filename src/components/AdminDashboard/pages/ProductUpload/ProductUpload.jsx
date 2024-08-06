@@ -7,9 +7,10 @@ import Chip from "@mui/material/Chip";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useNavigate, useParams } from "react-router-dom";
-import { Alert, Card, Col, Form, Row, Spinner } from "react-bootstrap";
+import { Card, Col, Form, Row, Spinner } from "react-bootstrap";
 import Button from "@mui/material/Button";
 import { useDropzone } from "react-dropzone";
+import { Alert, Snackbar } from "@mui/material";
 import "../../../../style/ProductUpload.css";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -42,9 +43,11 @@ const ProductUpload = () => {
   const [error, setError] = useState(null);
   const [image, setImage] = useState(null);
   const { id } = useParams();
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -102,21 +105,33 @@ const ProductUpload = () => {
           })
             .then(response => response.json())
             .then(() => {
-              setSuccessMessage("Prodotto modificato con successo!");
-              setErrorMessage("");
+              setSnackbarMessage("Prodotto modificato con successo!");
+              setSnackbarSeverity("success");
+              setSnackbarOpen(true);
               setTimeout(() => {
                 navigate(`/productDetailsAdmin/${id}`);
               }, 1500);
             })
             .catch(error => {
               console.error("Errore nel caricamento dell'immagine:", error);
-              setErrorMessage("Errore nel caricamento dell'immagine.");
+              setSnackbarMessage("Errore nel caricamento dell'immagine.");
+              setSnackbarSeverity("error");
+              setSnackbarOpen(true);
             });
+        } else {
+          setSnackbarMessage("Prodotto modificato con successo!");
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          setTimeout(() => {
+            navigate(`/productDetailsAdmin/${id}`);
+          }, 1500);
         }
       })
       .catch(error => {
         console.error("Error updating product:", error);
-        setErrorMessage("Errore nella modifica del prodotto.");
+        setSnackbarMessage("Errore nella modifica del prodotto.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
       });
   };
 
@@ -128,6 +143,10 @@ const ProductUpload = () => {
     onDrop,
     accept: "image/*",
   });
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
 
   if (loading) return <Spinner animation="border" />;
   if (error) return <p>Error: {error}</p>;
@@ -173,26 +192,19 @@ const ProductUpload = () => {
                 <h3 className="mb-4 text-center">Modifica prodotto</h3>
 
                 {/* Success and Error Messages */}
-                {successMessage && (
-                  <Alert
-                    className="mb-2 alert-success"
-                    variant="success"
-                    onClose={() => setSuccessMessage("")}
-                    dismissible
+                {snackbarOpen && (
+                  <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
                   >
-                    {successMessage}
-                  </Alert>
-                )}
-
-                {errorMessage && (
-                  <Alert
-                    className="mb-2 alert-danger"
-                    variant="danger"
-                    onClose={() => setErrorMessage("")}
-                    dismissible
-                  >
-                    {errorMessage}
-                  </Alert>
+                    <Alert
+                      onClose={handleCloseSnackbar}
+                      severity={snackbarSeverity}
+                    >
+                      {snackbarMessage}
+                    </Alert>
+                  </Snackbar>
                 )}
 
                 <Form.Group className="mb-2" controlId="name">

@@ -164,7 +164,7 @@ const ProductDetailsCustomer = () => {
   return (
     <>
       <MyNavbar />
-      <Container sx={{ mt: 4 }}>
+      <Container sx={{ my: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
             <Card>

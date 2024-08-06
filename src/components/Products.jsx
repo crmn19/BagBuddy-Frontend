@@ -50,56 +50,60 @@ const Products = ({
   };
 
   return (
-    <Container>
-      <Row>
-        {products.map(product => (
-          <Col
-            key={product.id}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            className="mb-4 text-start"
-          >
-            <Link
-              to={`/product/${product.id}`}
-              className="text-decoration-none"
+    <>
+      <Container>
+        <Row>
+          {products.map(product => (
+            <Col
+              key={product.id}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className="mb-4 text-start"
             >
-              <Card className="card-products">
-                <div className=" ratio ratio-1x1">
-                  <Card.Img variant="top" src={product.imageUrl} />
-                </div>
+              <Link
+                to={`/product/${product.id}`}
+                className="text-decoration-none"
+              >
+                <Card className="card-products">
+                  <div className=" ratio ratio-1x1">
+                    <Card.Img variant="top" src={product.imageUrl} />
+                  </div>
 
-                <Card.Body>
-                  <Card.Text>{product.name}</Card.Text>
-                  <Card.Title className="fw-bold">{product.price} €</Card.Title>
-                </Card.Body>
-              </Card>
-            </Link>
-          </Col>
-        ))}
-      </Row>
-
-      {size > 4 && totalPages > 1 && (
-        <Row className="my-5">
-          <Col>
-            <Pagination
-              page={currentPage}
-              className="d-flex justify-content-center"
-              count={totalPages}
-              onChange={handlePageChange}
-              renderItem={item => (
-                <PaginationItem
-                  component={Link}
-                  to={`/products?page=${item.page}`}
-                  {...item}
-                />
-              )}
-            />
-          </Col>
+                  <Card.Body>
+                    <Card.Text>{product.name}</Card.Text>
+                    <Card.Title className="fw-bold">
+                      {product.price} €
+                    </Card.Title>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+          ))}
         </Row>
-      )}
-    </Container>
+
+        {size > 4 && totalPages > 1 && (
+          <Row className="my-5">
+            <Col>
+              <Pagination
+                page={currentPage}
+                className="d-flex justify-content-center"
+                count={totalPages}
+                onChange={handlePageChange}
+                renderItem={item => (
+                  <PaginationItem
+                    component={Link}
+                    to={`/products?page=${item.page}`}
+                    {...item}
+                  />
+                )}
+              />
+            </Col>
+          </Row>
+        )}
+      </Container>
+    </>
   );
 };
 

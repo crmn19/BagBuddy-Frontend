@@ -183,3 +183,42 @@
     flex: 0 0 100% !important;
   }
 }
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .section-hero {
+    flex-direction: column;
+  }
+  .section-hero div {
+    margin-bottom: 10px;
+  }
+  .section-hero div p {
+    font-size: 6vw;
+  }
+
+  #basic-navbar-nav {
+    text-align: center;
+  }
+  #basic-navbar-nav input {
+    display: none;
+  }
+  #basic-navbar-nav button {
+    display: none;
+  }
+  #nav-dropdown-dark-example1 {
+    text-align: center;
+  }
+
+  .img-product {
+    width: 35vh;
+  }
+  img.MuiCardMedia-img {
+    height: 80%;
+  }
+  div.css-46bh2p-MuiCardContent-root {
+    text-align: center;
+  }
+}
+@media only screen and (min-width: 320px) and (max-width: 1500px) {
+  button.btn-product {
+    display: none;
+  }
+}

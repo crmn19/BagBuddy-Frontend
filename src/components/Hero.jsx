@@ -42,7 +42,7 @@ const Hero = () => {
           <Products size={4} />
         </Container>
       </div>
-      <section className="image-section d-flex justify-content-between align-items-center">
+      <section className="image-section d-flex justify-content-between align-items-center section-hero">
         <div className="image-container position-relative">
           <img
             src="../../src/assets/images/hero.png"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
@@ -9,7 +9,19 @@ import Button from "@mui/material/Button";
 import { styled, emphasize } from "@mui/material/styles";
 import { FaEye, FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { Select, MenuItem, FormControl, PaginationItem } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  PaginationItem,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import DashboardBox from "../Dashboard/components/DashboardBox";
 import { Row, Col, Card } from "react-bootstrap";
 import Header from "../../components/Header/Header";
@@ -49,6 +61,11 @@ const ProductsAdmin = ({
   const [showBy, setShowBy] = useState(size);
   const [catBy, setCatBy] = useState(category);
   const [sortOption, setSortOption] = useState(sortBy);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("info");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteProductId, setDeleteProductId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -76,7 +93,12 @@ const ProductsAdmin = ({
         setProducts(data.content || []);
         setTotalPages(data.totalPages || 1);
       })
-      .catch(error => console.error("Error fetching products:", error));
+      .catch(error => {
+        console.error("Error fetching products:", error);
+        setSnackbarMessage("Errore durante il recupero dei prodotti.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      });
   }, [currentPage, showBy, sortOption, search, catBy]);
 
   const handlePageChange = (event, newPage) => {
@@ -91,29 +113,49 @@ const ProductsAdmin = ({
     setSortOption(event.target.value);
   };
 
-  const handleDelete = async id => {
-    const confirmDelete = window.confirm(
-      "Sei sicuro di voler eliminare questo prodotto?"
-    );
-    if (confirmDelete) {
+  const handleDelete = async () => {
+    if (deleteProductId !== null) {
       const token = localStorage.getItem("authToken");
       try {
-        const response = await fetch(`http://localhost:3001/products/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://localhost:3001/products/${deleteProductId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        alert("Prodotto eliminato con successo!");
+        setSnackbarMessage("Prodotto eliminato con successo!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        setProducts(prevProducts =>
+          prevProducts.filter(product => product.id !== deleteProductId)
+        );
+        setDeleteProductId(null);
+        setDialogOpen(false);
       } catch (error) {
         console.error("Error deleting product:", error);
-        alert("Errore durante l'eliminazione del prodotto.");
+        setSnackbarMessage("Errore durante l'eliminazione del prodotto.");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+        setDialogOpen(false);
       }
     }
+  };
+
+  const openDeleteDialog = id => {
+    setDeleteProductId(id);
+    setDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDialogOpen(false);
+    setDeleteProductId(null);
   };
 
   return (
@@ -147,7 +189,7 @@ const ProductsAdmin = ({
             </Breadcrumbs>
           </div>
 
-          <Row className=" dashboardBoxWrapperRow dashboardBoxWrapperRowV2">
+          <Row className="dashboardBoxWrapperRow dashboardBoxWrapperRowV2">
             <Col className="col-md-12">
               <div className="dashboardBoxWrapper d-flex">
                 <DashboardBox
@@ -275,7 +317,7 @@ const ProductsAdmin = ({
                           <Button
                             className="error"
                             color="error"
-                            onClick={() => handleDelete(product.id)}
+                            onClick={() => openDeleteDialog(product.id)}
                           >
                             <MdDelete />
                           </Button>
@@ -310,6 +352,47 @@ const ProductsAdmin = ({
           </Card>
         </div>
       </div>
+
+      {/* Dialog per conferma eliminazione */}
+      <Dialog
+        open={dialogOpen}
+        onClose={closeDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title r">
+          Conferma eliminazione
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Sei sicuro di voler eliminare questo prodotto? <br /> Questa azione
+            non può essere annullata.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary">
+            Annulla
+          </Button>
+          <Button onClick={handleDelete} color="error" autoFocus>
+            Elimina
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar per feedback */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

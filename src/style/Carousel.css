@@ -33,7 +33,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
   width: calc(500%);
   animation: slide 40s linear infinite;
 }

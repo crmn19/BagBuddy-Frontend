@@ -29,8 +29,9 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar mt-4 mx-4">
+    <div className="sidebar mt-4 mx-4 ">
       <List
+        className=""
         sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
         component="nav"
         aria-labelledby="nested-list-subheader"

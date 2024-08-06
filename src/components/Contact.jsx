@@ -47,7 +47,6 @@ const contactData = [
         question: "Come posso contattare il supporto?",
         answer: "Puoi contattarci via email o telefono.",
       },
-      // Aggiungi altre FAQ se necessario
     ],
   },
   {
@@ -77,7 +76,7 @@ const Contact = () => {
         >
           CONTATTACI
         </Typography>
-        <Grid container spacing={4} className="my-5">
+        <Grid container spacing={4} className="my-5 ">
           {contactData.map(item => (
             <Grid item xs={12} md={6} lg={3} key={item.id}>
               <Card
@@ -146,7 +145,6 @@ const Contact = () => {
           ))}
         </Grid>
       </Container>
-      <Footer />
     </>
   );
 };
