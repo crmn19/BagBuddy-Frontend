@@ -216,9 +216,29 @@
   div.css-46bh2p-MuiCardContent-root {
     text-align: center;
   }
+  .allproduct-img {
+    width: 150%;
+    height: max-content;
+  }
 }
 @media only screen and (min-width: 320px) and (max-width: 1500px) {
   button.btn-product {
     display: none;
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .table-responsive {
+    overflow-x: auto;
   }
 }

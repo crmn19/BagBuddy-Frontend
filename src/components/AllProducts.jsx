@@ -40,7 +40,7 @@ const AllProducts = () => {
           <img
             src="../../src/assets/images/Inizia a esplorare..png"
             alt="Descrizione immagine 2"
-            className="w-100 h-50"
+            className="w-100 h-50 allproduct-img"
           />
           <div className="btn-overlay2">
             <ButtonGroup variant="text" aria-label="Basic button group">
@@ -127,7 +127,7 @@ const AllProducts = () => {
                 variant="outlined"
               >
                 <MenuItem value="price">Ordina: Prezzo crescente</MenuItem>
-                <MenuItem value="createdAt">Ordina: Data di aggiunta</MenuItem>
+                <MenuItem value="createdAt">Ordina: Ultimi arrivi</MenuItem>
               </Select>
             </Col>
           </Row>
