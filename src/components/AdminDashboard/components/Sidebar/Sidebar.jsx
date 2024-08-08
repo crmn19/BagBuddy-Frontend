@@ -68,13 +68,8 @@ const Sidebar = () => {
             </ListItemButton>
           </List>
         </Collapse>
-        <ListItemButton component={Link} to="/orders">
-          <ListItemIcon>
-            <FaCartArrowDown />
-          </ListItemIcon>
-          <ListItemText primary="Ordini" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/settings">
+
+        <ListItemButton component={Link} to="/myAccount">
           <ListItemIcon>
             <IoIosSettings />
           </ListItemIcon>

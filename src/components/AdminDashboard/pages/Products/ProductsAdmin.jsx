@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Chip from "@mui/material/Chip";
 import HomeIcon from "@mui/icons-material/Home";
@@ -67,10 +67,12 @@ const ProductsAdmin = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteProductId, setDeleteProductId] = useState(null);
 
+  const location = useLocation();
+
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const url = new URL("http://localhost:3001/products");
-    url.searchParams.append("page", currentPage - 1);
+    url.searchParams.append("page", currentPage - 1); // Backend is usually 0-indexed
     url.searchParams.append("size", showBy);
     url.searchParams.append("sortBy", sortOption);
     if (search) url.searchParams.append("search", search);
@@ -99,7 +101,7 @@ const ProductsAdmin = ({
         setSnackbarSeverity("error");
         setSnackbarOpen(true);
       });
-  }, [currentPage, showBy, sortOption, search, catBy]);
+  }, [currentPage, showBy, sortOption, search, catBy, location]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -336,13 +338,6 @@ const ProductsAdmin = ({
                         className="d-flex justify-content-center"
                         count={totalPages}
                         onChange={handlePageChange}
-                        renderItem={item => (
-                          <PaginationItem
-                            component={Link}
-                            to={`/productAdmin?page=${item.page}`}
-                            {...item}
-                          />
-                        )}
                       />
                     </Col>
                   </Row>

@@ -105,7 +105,7 @@ const ProductDetails = () => {
               <StyledBreadcrumb
                 label="Products"
                 component="a"
-                href="/productAdmin"
+                href="/products/list"
               />
               <StyledBreadcrumb label="Product View" />
             </Breadcrumbs>
