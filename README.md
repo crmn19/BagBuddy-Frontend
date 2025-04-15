@@ -1,5 +1,5 @@
 # BackEnd 
-- https://github.com/carmen-romano/BagBuddy-BackEnd
+- https://github.com/crmn19/BagBuddy-BackEnd
 # Bad Buddy
 
 This project is a comprehensive e-commerce platform coupled with an admin dashboard. It provides a seamless user experience for both customers and administrators, offering robust features for product management, order processing, and settings customization.
@@ -87,7 +87,7 @@ Set up environment variables:
 
 ## Authors
 
-- [@carmen-romano](https://github.com/carmen-romano)
+- (https://github.com/crmn19)
 
 ## License
 
