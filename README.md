@@ -24,7 +24,7 @@ This project is a comprehensive e-commerce platform coupled with an admin dashbo
 Clone the project
 
 ```bash
-git clone https://github.com/carmen-romano/BagBuddy-FrontEnd.git
+git clone https://github.com/crmn19/BagBuddy-FrontEnd.git
 ```
 
 Go to the project directory
